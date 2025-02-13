@@ -50,7 +50,7 @@ public abstract class Tile {
      * 
      * @return ture if it is occupied, and false otherwise
      */
-    public abstract boolean isTileOccupied();
+    public abstract boolean isOccupied();
 
     /**
      * Retrieves the piece occupying the tile 
@@ -66,7 +66,7 @@ public abstract class Tile {
          * Constructor that sets the coordinate of the tile
          * @param coord the coordinate of the tile
          */
-        EmptyTile(final int coord) {
+        private EmptyTile(final int coord) {
             super(coord);
         }
 
@@ -76,7 +76,7 @@ public abstract class Tile {
          * @return false, since the tile will always be unoccupied
          */
         @Override
-        public boolean isTileOccupied() {
+        public boolean isOccupied() {
             return false;
         }
 
@@ -101,7 +101,7 @@ public abstract class Tile {
          * @param coord the coordinate of the tile
          * @param piece the piece that is occupying the tile
          */
-        OccupiedTile(final int coord, Piece piece) {
+        private OccupiedTile(final int coord, Piece piece) {
             super(coord);
             this.piece = piece;
         }
@@ -111,7 +111,7 @@ public abstract class Tile {
          * @return true, since the tile will always be occupied
          */
         @Override
-        public boolean isTileOccupied() {
+        public boolean isOccupied() {
             return true;
         }
 
