@@ -24,7 +24,7 @@ public abstract class Tile {
         final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
 
         // make all possible empty tiles
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < BoardUtils.NUM_TILES; i++) {
             emptyTileMap.put(i, new EmptyTile(i));
         }
         // make empty tiles immutable
@@ -41,7 +41,7 @@ public abstract class Tile {
      * 
      * @param coord the coordinate of the tile
      */
-    private Tile(int coord) {
+    private Tile(final int coord) {
         this.coord = coord;
     }
     
@@ -101,7 +101,7 @@ public abstract class Tile {
          * @param coord the coordinate of the tile
          * @param piece the piece that is occupying the tile
          */
-        private OccupiedTile(final int coord, Piece piece) {
+        private OccupiedTile(final int coord, final Piece piece) {
             super(coord);
             this.piece = piece;
         }

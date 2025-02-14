@@ -1,6 +1,6 @@
 package com.chess.engine.pieces;
 
-import java.util.List;
+import java.util.Collection;
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
@@ -36,5 +36,5 @@ public abstract class Piece {
      * @param board the current state of the board
      * @return a list of all legal moves a piece can make
      */
-    public abstract List<Move> calcLegalMoves(final Board board);
+    public abstract Collection<Move> calcLegalMoves(final Board board);
 }
