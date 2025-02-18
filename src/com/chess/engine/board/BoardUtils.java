@@ -10,6 +10,9 @@ public class BoardUtils {
     public static final boolean[] COLUMN_B = initColumn(1);
     public static final boolean[] COLUMN_G = initColumn(6);
     public static final boolean[] COLUMN_H = initColumn(7);
+
+    public static final boolean[] ROW_2 = null;
+    public static final boolean[] ROW_7 = null;
     
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;

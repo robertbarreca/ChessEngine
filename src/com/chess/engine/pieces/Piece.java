@@ -11,6 +11,7 @@ import com.chess.engine.board.Move;
 public abstract class Piece {
     protected final int position;
     protected final Alliance alliance;
+    protected final boolean isFirstMove;
 
     /**
      * Constructor that sets the position and alliance of the piece
@@ -21,6 +22,7 @@ public abstract class Piece {
     Piece(int position, Alliance alliance) {
         this.position = position;
         this.alliance = alliance;
+        this.isFirstMove = false;
     }
 
     /**
@@ -29,6 +31,14 @@ public abstract class Piece {
      */
     public Alliance getAlliance() {
         return this.alliance;
+    }
+
+    /**
+     * Says whether 
+     * @return
+     */
+    public boolean isFirstMove() {
+        return this.isFirstMove;
     }
     
     /**
