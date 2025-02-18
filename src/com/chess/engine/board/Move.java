@@ -14,8 +14,8 @@ public abstract class Move {
         this.destCoord = destCoord;
     }
 
-    public static final class MajorMove extends Move {
-        public MajorMove(final Board board, final Piece movedPiece, final int destCoord) {
+    public static final class PassiveMove extends Move {
+        public PassiveMove(final Board board, final Piece movedPiece, final int destCoord) {
             super(board, movedPiece, destCoord);
         }
     }

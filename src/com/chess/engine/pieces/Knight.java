@@ -25,9 +25,9 @@ public class Knight extends Piece {
     }
 
     /**
-     * Calculates all legal moves that a piece can make
+     * Calculates all legal moves that a knight can make
      * @param board the current state of the board
-     * @return a list of all legal moves a piece can make
+     * @return a list of all legal moves a knight can make
      */
     @Override
     public Collection<Move> calcLegalMoves(final Board board) {
@@ -48,7 +48,7 @@ public class Knight extends Piece {
                 final Tile destTile = board.getTile(destCoord);
                 // tile is unoccupied
                 if (!destTile.isOccupied()) {
-                    legalMoves.add(new MajorMove(board, this, destCoord));
+                    legalMoves.add(new PassiveMove(board, this, destCoord));
                 }
                 // tile is occupied 
                 else {
