@@ -11,7 +11,7 @@ import com.chess.engine.board.Move;
 public abstract class Piece {
     protected final int position;
     protected final Alliance alliance;
-    protected final boolean isFirstMove;
+    protected final boolean hasMoved;
 
     /**
      * Constructor that sets the position and alliance of the piece
@@ -22,7 +22,7 @@ public abstract class Piece {
     Piece(final Alliance alliance, final int position) {
         this.position = position;
         this.alliance = alliance;
-        this.isFirstMove = false;
+        this.hasMoved = false;
     }
 
     /**
@@ -35,10 +35,10 @@ public abstract class Piece {
 
     /**
      * Says whether a piece has moved or not
-     * @return the member var isFirstMove
+     * @return the member var hasMoved
      */
-    public boolean isFirstMove() {
-        return this.isFirstMove;
+    public boolean hasMoved() {
+        return this.hasMoved;
     }
 
     /**

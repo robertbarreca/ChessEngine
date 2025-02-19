@@ -37,10 +37,18 @@ public class Board {
         this.blackPieces = calcActivePieces(this.gameBoard, Alliance.BLACK);
 
         // final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
-        final Collection<Move> blackMoves = calcMoves(this.blackPieces);
+        // final Collection<Move> blackMoves = calcMoves(this.blackPieces);
     }
-                
-    private Collection<Move> calcMoves(final Collection<Piece> pieces) {
+    
+    public Collection<Piece> getWhitePieces() {
+        return this.whitePieces;
+    }
+
+    public Collection<Piece> getBlackPieces() {
+        return this.blackPieces;
+    }
+
+    public Collection<Move> calcMoves(final Collection<Piece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final Piece p: pieces){
             legalMoves.addAll(p.calcLegalMoves(this));

@@ -46,9 +46,9 @@ public class Pawn extends Piece{
                 legalMoves.add(new PassiveMove(board, this, destCoord));
             }
             // pawn jump iff pawn hasn't moved
-            else if (offset == 16 && this.isFirstMove() &&
-                    (BoardUtils.ROW_2[this.position] && this.alliance.isBlack()) ||
-                    (BoardUtils.ROW_7[this.position] && this.alliance.isWhite())) {
+            else if (offset == 16 && !this.hasMoved &&
+                    ((BoardUtils.ROW_2[this.position] && this.alliance.isBlack()) ||
+                    (BoardUtils.ROW_7[this.position] && this.alliance.isWhite()))) {
                 final int behindDestCoord = this.position + (8 * this.alliance.getPawnDirection());
                 // two tiles in front aren't occupied
                 if (!board.getTile(behindDestCoord).isOccupied() &&

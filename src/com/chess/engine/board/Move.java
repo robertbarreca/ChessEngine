@@ -20,6 +20,11 @@ public abstract class Move {
         }
     }
 
+    @Override
+    public String toString() {
+        return ("(" + this.movedPiece.getPosition() + ", " + this.movedPiece + ", " + destCoord + ")");
+    }
+
     public static final class AttackMove extends Move {
         final Piece capturedPiece;
 
