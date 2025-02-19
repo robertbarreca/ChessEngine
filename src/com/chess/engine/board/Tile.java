@@ -1,9 +1,9 @@
 package com.chess.engine.board;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import com.chess.engine.pieces.Piece;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * The Tile class represents a single square on a chessboard.
@@ -28,11 +28,11 @@ public abstract class Tile {
             emptyTileMap.put(i, new EmptyTile(i));
         }
         // make empty tiles immutable
-        return ImmutableMap.copyOf(emptyTileMap);
+        return Collections.unmodifiableMap(emptyTileMap);
     }
 
     public static Tile createTile(final int coord, final Piece piece) {
-        // create new tile if piece exists or get cached tile if empty
+        // create new tile if piece exists or cache tile if empty
         return piece != null ? new OccupiedTile(coord, piece) : EMPTY_TILES.get(coord);
     }
 
@@ -44,6 +44,7 @@ public abstract class Tile {
     private Tile(final int coord) {
         this.coord = coord;
     }
+    
     
     /**
      * Determines whether a tile is occupied by a piece
@@ -70,6 +71,14 @@ public abstract class Tile {
             super(coord);
         }
 
+        /**
+         * Converts the tile to a string representation
+         * @returns the string representation of an unoccupied tile
+         */
+        @Override
+        public String toString() {
+            return "-"; 
+        }
 
         /**
          * Checks whether a tile is occupied by a piece
@@ -104,6 +113,17 @@ public abstract class Tile {
         private OccupiedTile(final int coord, final Piece piece) {
             super(coord);
             this.piece = piece;
+        }
+
+        /**
+         * Converts the tile to a string representation
+         * @returns the string representation of the piece on the tile
+         */
+        @Override
+        public String toString() {
+            return this.getPiece().getAlliance().isBlack() ? 
+                    this.getPiece().toString().toLowerCase() : 
+                    this.getPiece().toString();
         }
 
         /**

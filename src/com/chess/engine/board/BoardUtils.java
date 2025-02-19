@@ -11,8 +11,8 @@ public class BoardUtils {
     public static final boolean[] COLUMN_G = initColumn(6);
     public static final boolean[] COLUMN_H = initColumn(7);
 
-    public static final boolean[] ROW_2 = null;
-    public static final boolean[] ROW_7 = null;
+    public static final boolean[] ROW_2 = initRow(8);
+    public static final boolean[] ROW_7 = initRow(48);
     
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;
@@ -23,14 +23,23 @@ public class BoardUtils {
      * @param colNum The column index to initialize.
      * @return A boolean array where only the tiles in the specified column are set to true.
      */
-    private static boolean[] initColumn(int colNum){
+    private static boolean[] initColumn(int colNum) {
         final boolean[] column = new boolean[NUM_TILES];
-        do{
+        do {
             column[colNum] = true;
             colNum += NUM_TILES_PER_ROW;
-        } while(colNum < NUM_TILES);
+        } while (colNum < NUM_TILES);
 
         return column;
+    }
+    
+    private static boolean[] initRow(int rowNum){
+        final boolean[] row = new boolean[NUM_TILES];
+        do {
+            row[rowNum] = true;
+            rowNum++;
+        } while (rowNum % NUM_TILES_PER_ROW != 0);
+        return row;
     }
 
     /**
