@@ -2,6 +2,7 @@ package com.chess.engine.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
@@ -10,7 +11,6 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a single pawn on a chessboard
@@ -23,8 +23,8 @@ public class Pawn extends Piece{
      * @param position the position the pawn is in 
      * @param alliance the team that the pawn is aligned with
      */
-    Pawn(final int position, final Alliance alliance) {
-        super(position, alliance);
+    public Pawn(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -58,32 +58,41 @@ public class Pawn extends Piece{
             }
             // atacking move on diagonal
             else if (offset == 7 &&
-                !((BoardUtils.COLUMN_H[this.position] && this.alliance.isWhite()) ||
-                (BoardUtils.COLUMN_A[this.position] && this.alliance.isBlack()))) {
-                    // check if tile is occupied
-                    if (!board.getTile(destCoord).isOccupied()) {
-                        // check if piece is capturable
-                        Piece pieceOnTile = board.getTile(destCoord).getPiece();
-                        if (this.alliance != pieceOnTile.getAlliance()) {
-                            legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
-                        }
+                    !((BoardUtils.COLUMN_H[this.position] && this.alliance.isWhite()) ||
+                            (BoardUtils.COLUMN_A[this.position] && this.alliance.isBlack()))) {
+                // check if tile is occupied
+                if (!board.getTile(destCoord).isOccupied()) {
+                    // check if piece is capturable
+                    Piece pieceOnTile = board.getTile(destCoord).getPiece();
+                    if (this.alliance != pieceOnTile.getAlliance()) {
+                        legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
                     }
+                }
             }
             // atacking move on diagonal
             else if (offset == 9 &&
-                !((BoardUtils.COLUMN_A[this.position] && this.alliance.isWhite()) ||
-                (BoardUtils.COLUMN_H[this.position] && this.alliance.isBlack()))) {
-                    // check if tile is occupied
-                    if (!board.getTile(destCoord).isOccupied()) {
-                        // check if piece is capturable
-                        Piece pieceOnTile = board.getTile(destCoord).getPiece();
-                        if (this.alliance != pieceOnTile.getAlliance()) {
-                            legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
-                        }
+                    !((BoardUtils.COLUMN_A[this.position] && this.alliance.isWhite()) ||
+                            (BoardUtils.COLUMN_H[this.position] && this.alliance.isBlack()))) {
+                // check if tile is occupied
+                if (!board.getTile(destCoord).isOccupied()) {
+                    // check if piece is capturable
+                    Piece pieceOnTile = board.getTile(destCoord).getPiece();
+                    if (this.alliance != pieceOnTile.getAlliance()) {
+                        legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
                     }
+                }
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+    
+    /**
+     * Converts the pawn to a string
+     * @return the string representation of the pawn
+     */
+    @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
     }
     
 }

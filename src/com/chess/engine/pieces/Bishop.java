@@ -6,7 +6,6 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.*;
-import com.google.common.collect.ImmutableList;
 import com.chess.engine.board.Tile;
 
 /**
@@ -20,8 +19,8 @@ public class Bishop extends Piece{
      * @param position the position the bishop is in 
      * @param alliance the team that the bishop is aligned with
      */
-    Bishop(int position, Alliance alliance) {
-        super(position, alliance);
+    public Bishop(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -62,9 +61,17 @@ public class Bishop extends Piece{
                 }
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
     }
     
+    /**
+     * Converts the bishop to a string
+     * @return the string representation of the bishop
+     */
+    @Override
+    public String toString() {
+        return PieceType.BISHOP.toString();
+    }
 
     /**
      * Checks if the knight is on column A and if the given move offset 

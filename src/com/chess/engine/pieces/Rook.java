@@ -2,6 +2,7 @@ package com.chess.engine.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
@@ -11,7 +12,6 @@ import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
 import com.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a single rook on a chessboard
@@ -26,8 +26,8 @@ public class Rook extends Piece{
      * @param position the position the rook is in 
      * @param alliance the team that the rook is aligned with
      */
-    Rook(int position, Alliance alliance) {
-        super(position, alliance);
+    public Rook(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -68,9 +68,18 @@ public class Rook extends Piece{
                 }
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
     }
     
+    /**
+     * Converts the rook to a string
+     * @return the string representation of the rook
+     */
+    @Override
+    public String toString() {
+        return PieceType.ROOK.toString();
+    }
+
     /**
      * Checks if the rook is on column A and if the given move offset 
      * would cause it to wrap around to the wrong position

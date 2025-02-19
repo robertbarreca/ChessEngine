@@ -2,6 +2,7 @@ package com.chess.engine.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
@@ -11,7 +12,6 @@ import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
 import com.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a single king on the chessboard
@@ -24,8 +24,8 @@ public class King extends Piece{
      * @param position the position the king is in 
      * @param alliance the team that the king is aligned with
      */
-    King(int position, Alliance alliance) {
-        super(position, alliance);
+    public King(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -63,8 +63,16 @@ public class King extends Piece{
             }
 
         }
+        return Collections.unmodifiableList(legalMoves);
+    }
 
-        return ImmutableList.copyOf(legalMoves);
+    /**
+     * Converts the king to a string
+     * @return the string representation of the king
+     */
+    @Override
+    public String toString() {
+        return PieceType.KING.toString();
     }
     
     /**
@@ -89,7 +97,8 @@ public class King extends Piece{
      * @return true if the move is invalid due to the king being in column B, false otherwise.
      */
     private static boolean isColumnHExclusion(final int currPos, final int candidateOffset) {
-        return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 1 || candidateOffset == 9);
+        return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 1
+        || candidateOffset == 9);
     }
     
 }

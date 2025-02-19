@@ -2,11 +2,13 @@ package com.chess.engine.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
+import com.chess.engine.board.Move.AttackMove;
+import com.chess.engine.board.Move.PassiveMove;
 import static  com.chess.engine.board.Move.*;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a single knight on a chessboard
@@ -20,8 +22,8 @@ public class Knight extends Piece {
      * @param position the position the knight is in 
      * @param alliance the team that the knight is aligned with
      */
-    Knight(final int position, final Alliance alliance) {
-        super(position, alliance);
+    public Knight(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -63,7 +65,16 @@ public class Knight extends Piece {
             }
 
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    /**
+     * Converts the knight to a string
+     * @return the string representation of the knight
+     */
+    @Override
+    public String toString() {
+        return PieceType.KNIGHT.toString();
     }
 
     /**

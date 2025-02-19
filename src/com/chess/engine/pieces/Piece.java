@@ -19,7 +19,7 @@ public abstract class Piece {
      * @param position the location on a chessboard
      * @param alliance the team the piece is aligned with
      */
-    Piece(int position, Alliance alliance) {
+    Piece(final Alliance alliance, final int position) {
         this.position = position;
         this.alliance = alliance;
         this.isFirstMove = false;
@@ -34,11 +34,19 @@ public abstract class Piece {
     }
 
     /**
-     * Says whether 
-     * @return
+     * Says whether a piece has moved or not
+     * @return the member var isFirstMove
      */
     public boolean isFirstMove() {
         return this.isFirstMove;
+    }
+
+    /**
+     * Gets the current coordinate of a piece
+     * @return the current coordinate of a piece
+     */
+    public int getPosition(){
+        return this.position;
     }
     
     /**
@@ -47,4 +55,24 @@ public abstract class Piece {
      * @return a list of all legal moves a piece can make
      */
     public abstract Collection<Move> calcLegalMoves(final Board board);
+
+    public enum PieceType {
+        PAWN("P"),
+        KNIGHT("N"),
+        BISHOP("B"),
+        ROOK("R"),
+        QUEEN("Q"),
+        KING("K");
+
+        private String pieceName;
+
+        PieceType(final String pieceName) {
+            this.pieceName = pieceName;
+        }
+
+        @Override
+        public String toString() {
+            return this.pieceName;
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.chess.engine.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
@@ -11,7 +12,6 @@ import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
 import com.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a single queen on a chessboard
@@ -26,8 +26,8 @@ public class Queen extends Piece{
      * @param position the position the queen is in 
      * @param alliance the team that the queen is aligned with
      */
-    Queen(int position, Alliance alliance) {
-        super(position, alliance);
+    public Queen(final Alliance alliance, final int position) {
+        super(alliance, position);
     }
 
     /**
@@ -68,7 +68,16 @@ public class Queen extends Piece{
                 }
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    /**
+     * Converts the queen to a string
+     * @return the string representation of the queen
+     */
+    @Override
+    public String toString() {
+        return PieceType.QUEEN.toString();
     }
     
     /**
