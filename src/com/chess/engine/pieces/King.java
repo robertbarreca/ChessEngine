@@ -36,11 +36,10 @@ public class King extends Piece{
     @Override
     public Collection<Move> calcLegalMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
-
         for (final int offset : CANDIDATE_MOVE_OFFSETS) {
             final int destCoord = this.position + offset;
             // edge cases
-            if (isColumnAExclusion(destCoord, offset) || isColumnHExclusion(destCoord, offset)) {
+            if (!BoardUtils.isValidTileCoord(destCoord) || isColumnAExclusion(destCoord, offset) || isColumnHExclusion(destCoord, offset)) {
                 continue;
             }
             // is valid tile

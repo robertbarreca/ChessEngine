@@ -60,8 +60,8 @@ public class Pawn extends Piece{
             else if (offset == 7 &&
                     !((BoardUtils.COLUMN_H[this.position] && this.alliance.isWhite()) ||
                             (BoardUtils.COLUMN_A[this.position] && this.alliance.isBlack()))) {
-                // check if tile is occupied
-                if (!board.getTile(destCoord).isOccupied()) {
+                // tile must be occupied
+                if (board.getTile(destCoord).isOccupied()) {
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
@@ -73,8 +73,8 @@ public class Pawn extends Piece{
             else if (offset == 9 &&
                     !((BoardUtils.COLUMN_A[this.position] && this.alliance.isWhite()) ||
                             (BoardUtils.COLUMN_H[this.position] && this.alliance.isBlack()))) {
-                // check if tile is occupied
-                if (!board.getTile(destCoord).isOccupied()) {
+                // tile must be occupied
+                if (board.getTile(destCoord).isOccupied()) {
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
