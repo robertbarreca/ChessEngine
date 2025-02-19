@@ -22,7 +22,7 @@ public abstract class Move {
 
     @Override
     public String toString() {
-        return ("(" + this.movedPiece.getPosition() + ", " + this.movedPiece + ", " + destCoord + ")");
+        return ("(" + this.movedPiece.getPosition() + ", " + destCoord + ")");
     }
 
     public static final class AttackMove extends Move {

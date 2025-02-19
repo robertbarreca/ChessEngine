@@ -37,11 +37,12 @@ public class King extends Piece{
     public Collection<Move> calcLegalMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final int offset : CANDIDATE_MOVE_OFFSETS) {
-            final int destCoord = this.position + offset;
+            
             // edge cases
-            if (!BoardUtils.isValidTileCoord(destCoord) || isColumnAExclusion(destCoord, offset) || isColumnHExclusion(destCoord, offset)) {
+            if (!BoardUtils.isValidTileCoord(this.position) || isColumnAExclusion(this.position, offset) || isColumnHExclusion(this.position, offset)) {
                 continue;
             }
+            final int destCoord = this.position + offset;
             // is valid tile
             if (BoardUtils.isValidTileCoord(destCoord)) {
                 final Tile destTile = board.getTile(destCoord);

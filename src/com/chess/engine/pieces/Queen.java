@@ -18,7 +18,7 @@ import com.chess.engine.board.Tile;
  */
 public class Queen extends Piece{
 
-    private static final int[] CANDIDATE_MOVE_OFFSETS = { -9, -8, -7 -1, 1, 7, 8, 9 };
+    private static final int[] CANDIDATE_MOVE_OFFSETS = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
 
     /**

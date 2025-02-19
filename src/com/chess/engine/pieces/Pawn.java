@@ -44,6 +44,7 @@ public class Pawn extends Piece{
             // regular pawn move if tile is unocuppied
             if (offset == 8 && !board.getTile(destCoord).isOccupied()) {
                 legalMoves.add(new PassiveMove(board, this, destCoord));
+                System.out.print("passive move 1 square");
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&

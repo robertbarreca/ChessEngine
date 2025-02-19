@@ -36,8 +36,8 @@ public class Board {
         this.whitePieces = calcActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calcActivePieces(this.gameBoard, Alliance.BLACK);
 
-        // final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
-        // final Collection<Move> blackMoves = calcMoves(this.blackPieces);
+        final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
+        final Collection<Move> blackMoves = calcMoves(this.blackPieces);
     }
     
     public Collection<Piece> getWhitePieces() {

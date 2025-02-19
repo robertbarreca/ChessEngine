@@ -3,97 +3,262 @@ package com.tests.chess.engine.pieces;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-
 import org.junit.Test;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
-import com.chess.engine.board.Move;
+import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Knight;
 import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Queen;
+import com.chess.engine.pieces.Rook;
 
 public class TestPieces {
 
     @Test
-    public void testKnightMiddleOnEmptyBoard() {
+    public void testStartingPawn() {
+        final Board.Builder builder = new Board.Builder();
+        Pawn pawn = new Pawn(Alliance.WHITE, 48);
+        builder.setPiece(pawn);
+        Board board = builder.build();
+        assertEquals(2, pawn.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testStartingPawnAttacking() {
+        // can attack two pieces
+        final Board.Builder builder = new Board.Builder();
+        Pawn attackingPawn = new Pawn(Alliance.WHITE, 50);
+        builder.setPiece(attackingPawn);
+        builder.setPiece(new Pawn(Alliance.BLACK, 41));
+        builder.setPiece(new Pawn(Alliance.BLACK, 43));
+        Board board = builder.build();
+        assertEquals(4, attackingPawn.calcLegalMoves(board).size());
+
+        // can attack only left piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 43));
+        board = builder.build();
+
+        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+
+        // can attack only right piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 41));
+        builder.setPiece(new Pawn(Alliance.BLACK, 43));
+        board = builder.build();
+        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMovedPawnAttacking() {
+        // can attack two pieces
+        final Board.Builder builder = new Board.Builder();
+        Pawn attackingPawn = new Pawn(Alliance.WHITE, 42);
+        builder.setPiece(attackingPawn);
+        builder.setPiece(new Pawn(Alliance.BLACK, 33));
+        builder.setPiece(new Pawn(Alliance.BLACK, 35));
+        Board board = builder.build();
+        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+
+        // can attack only left piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 35));
+        board = builder.build();
+        assertEquals(2, attackingPawn.calcLegalMoves(board).size());
+
+        // can attack only right piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 33));
+        builder.setPiece(new Pawn(Alliance.BLACK, 35));
+        board = builder.build();
+        assertEquals(2, attackingPawn.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testPawnAttackingWrap() {
+        // white pawn column H and black pawn column A
+        final Board.Builder builder = new Board.Builder();
+        Pawn whitePawn = new Pawn(Alliance.WHITE, 47);
+        Pawn blackPawn = new Pawn(Alliance.BLACK, 40);
+        builder.setPiece(whitePawn);
+        builder.setPiece(blackPawn);
+        Board board = builder.build();
+        assertEquals(1, whitePawn.calcLegalMoves(board).size());
+        assertEquals(1, blackPawn.calcLegalMoves(board).size());
+        
+        
+        // white pawn column A and black pawn column H
+        whitePawn = new Pawn(Alliance.WHITE, 32);
+        blackPawn = new Pawn(Alliance.BLACK, 23);
+        builder.setPiece(whitePawn);
+        builder.setPiece(blackPawn);
+        board = builder.build();
+        assertEquals(1, whitePawn.calcLegalMoves(board).size());
+        assertEquals(1, blackPawn.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testPawnPieceBlocking() {
+        // // starting position blocking one tile
+        final Board.Builder builder = new Board.Builder();
+        Pawn startingPawn = new Pawn(Alliance.WHITE, 50);
+        builder.setPiece(startingPawn);
+        builder.setPiece(new Pawn(Alliance.WHITE, 34));
+        Board board = builder.build();
+        assertEquals(1, startingPawn.calcLegalMoves(board).size());
+        
+        // starting position blocking two tiles
+        builder.setPiece(new Pawn(Alliance.BLACK, 42));
+        board = builder.build();
+        assertEquals(0, startingPawn.calcLegalMoves(board).size());
+
+        // non-starting position blocking one tile
+        Pawn movedPawn = new Pawn(Alliance.BLACK, 22);
+        builder.setPiece(movedPawn);
+        builder.setPiece(new Pawn(Alliance.WHITE, 30));
+        board = builder.build();
+        assertEquals(0, movedPawn.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMiddleKnightEmptyBoard() {
         final Board.Builder builder = new Board.Builder();
         Knight knight = new Knight(Alliance.WHITE, 36);
         builder.setPiece(knight);
         final Board board = builder.build();
-        final Collection<Move> legalMoves = knight.calcLegalMoves(board);
-        assertEquals(8, legalMoves.size());
-
+        assertEquals(8, knight.calcLegalMoves(board).size());
     }
-    
+
     @Test
-    public void testKnightStartingPositions() {
+    public void testKnightWrappingEmptyBoard() {
         final Board.Builder builder = new Board.Builder();
 
-        Knight blackKnight0 = new Knight(Alliance.BLACK, 1);
-        Knight blackKnight1 = new Knight(Alliance.BLACK, 6);
-        Knight whiteKnight0 = new Knight(Alliance.WHITE, 62);
-        Knight whiteKnight1 = new Knight(Alliance.WHITE, 57);
+        Knight knightA = new Knight(Alliance.WHITE, 24);
+        Knight knightB = new Knight(Alliance.WHITE, 25);
+        Knight knightG = new Knight(Alliance.WHITE, 30);
+        Knight knightH = new Knight(Alliance.WHITE, 31);
 
-        builder.setPiece(blackKnight0);
-        builder.setPiece(blackKnight1);
-        builder.setPiece(whiteKnight0);
-        builder.setPiece(whiteKnight1);
-        final Board board = builder.build();
+        builder.setPiece(knightA);
+        builder.setPiece(knightB);
+        builder.setPiece(knightG);
+        builder.setPiece(knightH);
 
-        final Collection<Move> blackKnight0LegalMoves = blackKnight0.calcLegalMoves(board);
-        final Collection<Move> blackKnight1LegalMoves = blackKnight1.calcLegalMoves(board);
-        final Collection<Move> whiteKnight0LegalMoves = whiteKnight0.calcLegalMoves(board);
-        final Collection<Move> whiteKnight1LegalMoves = whiteKnight1.calcLegalMoves(board);
-
-        assertEquals(3, blackKnight0LegalMoves.size());
-        assertEquals(3, blackKnight1LegalMoves.size());
-        assertEquals(3, whiteKnight0LegalMoves.size());
-        assertEquals(3, whiteKnight1LegalMoves.size());
-    }
-    
-    @Test
-    public void testStartingPawns() {
-        final Board.Builder builder = new Board.Builder();
-
-        final Pawn[] blackPawns = new Pawn[8];
-        final Pawn[] whitePawns = new Pawn[8];
-
-        // populate starting pawns
-        for (int i = 0; i < 8; i++) {
-            Pawn blackPawn = new Pawn(Alliance.BLACK, i + 8);
-            Pawn whitePawn = new Pawn(Alliance.WHITE, i + 48);
-
-            blackPawns[i] = blackPawn;
-            whitePawns[i] = whitePawn;
-
-            builder.setPiece(blackPawn);
-            builder.setPiece(whitePawn);
-        }
         Board board = builder.build();
-        for (int i = 0; i < 8; i++) {
-            Collection<Move> blackLegalMoves = blackPawns[i].calcLegalMoves(board);
-            Collection<Move> whiteLegalMoves = whitePawns[i].calcLegalMoves(board);
-            assertEquals(2, blackLegalMoves.size());
-            assertEquals(2, whiteLegalMoves.size());
-        }
+
+        assertEquals(4, knightA.calcLegalMoves(board).size());
+        assertEquals(6, knightB.calcLegalMoves(board).size());
+        assertEquals(6, knightG.calcLegalMoves(board).size());
+        assertEquals(4, knightH.calcLegalMoves(board).size());
     }
-    // @Test
-    // public void testMiddleQueenOnEmptyBoard() {
-    //     final Board.Builder builder = new Board.Builder();
-    //     // Black Layout
-    //     builder.setPiece(new King(Alliance.BLACK, 4));
-    //     // White Layout
-    //     builder.setPiece(new Queen(Alliance.WHITE, 36));
-    //     builder.setPiece(new King(Alliance.WHITE, 60));
-    //     // Set the current player
-    //     builder.setCurrPlayer(Alliance.WHITE);
-    //     final Board board = builder.build();
-    //     final Collection<Move> whiteLegals = board.calcMoves(board.getWhitePieces());
-    //     final Collection<Move> blackLegals = board.calcMoves(board.getBlackPieces());
-    //     assertEquals(31, whiteLegals.size());
-    //     assertEquals(5, blackLegals.size());
-    // }
+
+    @Test
+    public void testKnightPieceBlocking() {
+        final Board.Builder builder = new Board.Builder();
+        Knight knight = new Knight(Alliance.WHITE, 36);
+        builder.setPiece(knight);
+        // blocking piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 21));
+        // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 19));
+        final Board board = builder.build();
+        assertEquals(7, knight.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMiddleBishopEmptyBoard() {
+        final Board.Builder builder = new Board.Builder();
+        Bishop bishop = new Bishop(Alliance.WHITE, 36);
+        builder.setPiece(bishop);
+        Board board = builder.build();
+        assertEquals(13, bishop.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testBishopPieceBlocking() {
+        final Board.Builder builder = new Board.Builder();
+        Bishop bishop = new Bishop(Alliance.WHITE, 36);
+        builder.setPiece(bishop);
+        // blocking piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 18));
+        // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 22));
+        Board board = builder.build();
+        assertEquals(9, bishop.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMiddleRookEmptyBoard() {
+        final Board.Builder builder = new Board.Builder();
+        Rook rook = new Rook(Alliance.WHITE, 36);
+        builder.setPiece(rook);
+        Board board = builder.build();
+        assertEquals(14, rook.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testRookPieceBlocking() {
+        final Board.Builder builder = new Board.Builder();
+        Rook rook = new Rook(Alliance.WHITE, 36);
+        // blocking piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 12));
+        // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 33));
+        builder.setPiece(rook);
+        Board board = builder.build();
+        assertEquals(11, rook.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMiddleQueenEmptyBoard() {
+        final Board.Builder builder = new Board.Builder();
+        Queen queen = new Queen(Alliance.WHITE, 36);
+        builder.setPiece(queen);
+        final Board board = builder.build();
+        assertEquals(27, queen.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testQueenPieceBlocking() {
+        final Board.Builder builder = new Board.Builder();
+        Queen queen = new Queen(Alliance.WHITE, 36);
+        builder.setPiece(queen);
+        // blocking piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 12));
+        // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 33));
+        final Board board = builder.build();
+        assertEquals(24, queen.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testMiddleKingEmptyBoard() {
+        final Board.Builder builder = new Board.Builder();
+        King king = new King(Alliance.WHITE, 36);
+        builder.setPiece(king);
+        final Board board = builder.build();
+        assertEquals(8, king.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testKingWrappingEmptyBoard() {
+        final Board.Builder  builder= new Board.Builder();
+        King kingA = new King(Alliance.WHITE, 32);
+        King kingH = new King(Alliance.WHITE, 39);
+        builder.setPiece(kingA);
+        builder.setPiece(kingH);
+        final Board board = builder.build();
+        assertEquals(5, kingA.calcLegalMoves(board).size());
+        assertEquals(5, kingH.calcLegalMoves(board).size());
+    }
+
+    @Test
+    public void testKingPieceBlocking() {
+        final Board.Builder builder = new Board.Builder();
+        King king = new King(Alliance.WHITE, 36);
+        builder.setPiece(king);
+        // blocking piece
+        builder.setPiece(new Pawn(Alliance.WHITE, 35));
+        // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 37));
+        final Board board = builder.build();
+        assertEquals(7, king.calcLegalMoves(board).size());
+    }
 }
