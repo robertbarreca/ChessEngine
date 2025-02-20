@@ -104,4 +104,13 @@ public class Rook extends Piece{
         return BoardUtils.COLUMN_H[currPos] && candidateOffset == 1;
     }
     
+    /**
+     * Creates a new rook based on the move
+     * @param move the move that was made
+     * @return the new rook created from the move
+     */
+    @Override
+    public Rook movePiece(Move move) {
+        return new Rook(move.getMovedPiece().getAlliance(), move.getDestCoord());
+    }
 }

@@ -101,7 +101,17 @@ public class Queen extends Piece{
      * @return true if the move is invalid due to the queen being in column H, false otherwise.
      */
     private static boolean isColumnHExclusion(final int currPos, final int candidateOffset) {
-        return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 1 || candidateOffset ==  9);
+        return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 1 || candidateOffset == 9);
+    }
+    
+    /**
+     * Creates a new queen based on the move
+     * @param move the move that was made
+     * @return the new queen created from the move
+     */
+    @Override
+    public Queen movePiece(Move move) {
+        return new Queen(move.getMovedPiece().getAlliance(), move.getDestCoord());
     }
     
 }

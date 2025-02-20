@@ -32,6 +32,14 @@ public abstract class Move {
     }
 
     /**
+     * gets the moved piece
+     * @return the moved piece
+     */
+    public Piece getMovedPiece() {
+        return this.movedPiece;
+    }
+
+    /**
      * Converts a move to it's string representation
      * @return the String representation of a move
      */
@@ -56,10 +64,30 @@ public abstract class Move {
             super(board, movedPiece, destCoord);
         }
 
+        /**
+         * This method rebuilds the board based on the move made
+         * @return the new board based on the move
+         */
         @Override
         public Board execute() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'execute'");
+            final Board.Builder builder = new Board.Builder();
+            // set curr player's pieces except for moved piece
+            for (final Piece piece : this.board.getCurrPlayer().getActivePieces()) {
+                if (!piece.equals(this.movedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set opponents pieces
+            for (final Piece piece : this.board.getCurrPlayer().getOpponent().getActivePieces()) {
+                if (!piece.equals(this.movedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set movedPiece
+            builder.setPiece(this.movedPiece.movePiece(this));
+            // switch active player
+            builder.setCurrPlayerAlliance(this.board.getCurrPlayer().getOpponent().getAlliance());
+            return builder.build();
         }
     }
 
@@ -81,10 +109,13 @@ public abstract class Move {
             this.capturedPiece = capturedPiece;
         }
 
+        /**
+         * This method rebuilds the board based on the move made
+         * @return the new board based on the move
+         */
         @Override
         public Board execute() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'execute'");
+            return null;
         }
     }
 }

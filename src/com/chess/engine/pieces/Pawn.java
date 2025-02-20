@@ -96,4 +96,13 @@ public class Pawn extends Piece{
         return PieceType.PAWN.toString();
     }
     
+    /**
+     * Creates a new pawn based on the move
+     * @param move the move that was made
+     * @return the new pawn created from the move
+     */
+    @Override
+    public Pawn movePiece(Move move) {
+        return new Pawn(move.getMovedPiece().getAlliance(), move.getDestCoord());
+    }
 }

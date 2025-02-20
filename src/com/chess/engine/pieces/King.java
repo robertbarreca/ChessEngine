@@ -98,7 +98,17 @@ public class King extends Piece{
      */
     private static boolean isColumnHExclusion(final int currPos, final int candidateOffset) {
         return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 1
-        || candidateOffset == 9);
+                || candidateOffset == 9);
+    }
+    
+    /**
+     * Creates a new king based on the move
+     * @param move the move that was made
+     * @return the new king created from the move
+     */
+    @Override
+    public King movePiece(Move move) {
+        return new King(move.getMovedPiece().getAlliance(), move.getDestCoord());
     }
     
 }

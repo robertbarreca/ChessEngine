@@ -37,7 +37,7 @@ public class Board {
      * Constructor that sets up the chess board
      * @param builder
      */
-    private Board(Builder builder) {
+    private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calcActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calcActivePieces(this.gameBoard, Alliance.BLACK);
@@ -47,7 +47,7 @@ public class Board {
 
         this.whitePlayer = new WhitePlayer(this, whiteMoves, blackMoves);
         this.blackPlayer = new BlackPlayer(this, whiteMoves, blackMoves);
-        this.currPlayer = null;
+        this.currPlayer = builder.currPlayerAlliance.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
     /**
@@ -185,7 +185,7 @@ public class Board {
         builder.setPiece(new Knight(Alliance.WHITE, 62));
         builder.setPiece(new Rook(Alliance.WHITE, 63));
         //white to move
-        builder.setCurrPlayer(Alliance.WHITE);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         //build the board
         return builder.build();
     }
@@ -205,7 +205,7 @@ public class Board {
      */
     public static class Builder {
         Map<Integer, Piece> boardConfig;
-        Alliance currPlayer;
+        Alliance currPlayerAlliance;
 
         public Builder() {
             this.boardConfig = new HashMap<>();
@@ -228,8 +228,8 @@ public class Board {
          * @param currPlayer the alliance representing the current player
          * @return the updated Builder instance
          */
-        public Builder setCurrPlayer(final Alliance currPlayer) {
-            this.currPlayer = currPlayer;
+        public Builder setCurrPlayerAlliance(final Alliance currPlayerAlliance) {
+            this.currPlayerAlliance = currPlayerAlliance;
             return this;
         }
 

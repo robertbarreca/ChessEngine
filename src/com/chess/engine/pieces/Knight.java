@@ -125,6 +125,16 @@ public class Knight extends Piece {
         return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -15 || candidateOffset == -6
                 || candidateOffset == 10 || candidateOffset == 17);
     }
+
+    /**
+     * Creates a new knight based on the move
+     * @param move the move that was made
+     * @return the new knight created from the move
+     */
+    @Override
+    public Knight movePiece(Move move) {
+        return new Knight(move.getMovedPiece().getAlliance(), move.getDestCoord());
+    }
 }
 
 

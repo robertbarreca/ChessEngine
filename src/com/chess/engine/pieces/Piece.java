@@ -62,6 +62,13 @@ public abstract class Piece {
      */
     public abstract Collection<Move> calcLegalMoves(final Board board);
 
+    /**
+     * Creates a new piece based on the move
+     * @param move the move that was made
+     * @return the new piece created from the move
+     */
+    public abstract Piece movePiece(Move move);
+
     public enum PieceType {
         PAWN("P"),
         KNIGHT("N"),

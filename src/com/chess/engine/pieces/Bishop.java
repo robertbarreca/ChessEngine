@@ -96,4 +96,14 @@ public class Bishop extends Piece{
     private static boolean isColumnHExclusion(final int currPos, final int candidateOffset) {
         return BoardUtils.COLUMN_H[currPos] && (candidateOffset == -7 || candidateOffset == 9);
     }
+
+    /**
+     * Creates a new bishop based on the move
+     * @param move the move that was made
+     * @return the new bishop created from the move
+     */
+    @Override
+    public Bishop movePiece(Move move) {
+        return new Bishop(move.getMovedPiece().getAlliance(), move.getDestCoord());
+    }
 }
