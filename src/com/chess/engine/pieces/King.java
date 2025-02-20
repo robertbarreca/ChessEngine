@@ -25,7 +25,7 @@ public class King extends Piece{
      * @param alliance the team that the king is aligned with
      */
     public King(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.KING, alliance, position);
     }
 
     /**

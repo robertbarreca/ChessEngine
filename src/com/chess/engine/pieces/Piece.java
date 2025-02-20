@@ -9,6 +9,7 @@ import com.chess.engine.board.Move;
  * This class represents a single piece on a chessboard
  */
 public abstract class Piece {
+    protected final PieceType pieceType;
     protected final int position;
     protected final Alliance alliance;
     protected final boolean hasMoved;
@@ -19,7 +20,8 @@ public abstract class Piece {
      * @param position the location on a chessboard
      * @param alliance the team the piece is aligned with
      */
-    Piece(final Alliance alliance, final int position) {
+    Piece(final PieceType pieceType, final Alliance alliance, final int position) {
+        this.pieceType = pieceType;
         this.position = position;
         this.alliance = alliance;
         this.hasMoved = false;
@@ -45,8 +47,12 @@ public abstract class Piece {
      * Gets the current coordinate of a piece
      * @return the current coordinate of a piece
      */
-    public int getPosition(){
+    public int getPosition() {
         return this.position;
+    }
+    
+    public PieceType getPieceType() {
+        return this.pieceType;
     }
     
     /**
@@ -62,17 +68,42 @@ public abstract class Piece {
         BISHOP("B"),
         ROOK("R"),
         QUEEN("Q"),
-        KING("K");
+        KING("K") {
+            /**
+            * Says whether the current piece is a king or not
+            * @return true
+            */
+            @Override
+            public boolean isKing(){
+                return true;
+            }
+        };
 
         private String pieceName;
 
+        /**
+         * Constructor that sets the type of the piece
+         * @param pieceName the name of the piece
+         */
         PieceType(final String pieceName) {
             this.pieceName = pieceName;
         }
 
+        /**
+         * Converts the PieceType to a string
+         * @return the String representation of the piece type
+         */
         @Override
         public String toString() {
             return this.pieceName;
+        }
+
+        /**
+         * Says whether the current piece is a king or not
+         * @return false since most pieces aren't kings
+         */
+        public boolean isKing() {
+            return false;
         }
     }
 }

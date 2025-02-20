@@ -15,6 +15,9 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
+import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.Player;
+import com.chess.engine.player.WhitePlayer;
 
 /**
  * This class represents a chess board
@@ -24,6 +27,9 @@ public class Board {
     private final List<Tile> gameBoard;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final Player currPlayer;
 
 
 
@@ -38,14 +44,50 @@ public class Board {
 
         final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
         final Collection<Move> blackMoves = calcMoves(this.blackPieces);
+
+        this.whitePlayer = new WhitePlayer(this, whiteMoves, blackMoves);
+        this.blackPlayer = new BlackPlayer(this, whiteMoves, blackMoves);
+        this.currPlayer = null;
     }
     
+    /**
+     * Gets all white pieces currently on the board
+     * @return all white pieces currently on the board
+     */
     public Collection<Piece> getWhitePieces() {
         return this.whitePieces;
     }
 
+    /**
+     * Gets all black pieces currently on the board
+     * @return all black pieces currently on the board
+     */
     public Collection<Piece> getBlackPieces() {
         return this.blackPieces;
+    }
+
+    /**
+     * gets the white player 
+     * @return the white player 
+     */
+    public Player getWhitePlayer() {
+        return this.whitePlayer;
+    }
+
+    /**
+     * gets the black player
+     * @return the black player
+     */
+    public Player getBlackPlayer() {
+        return this.blackPlayer;
+    }
+
+    /**
+     * gets the current player
+     * @return the current player
+     */
+    public Player getCurrPlayer() {
+        return this.currPlayer;
     }
 
     public Collection<Move> calcMoves(final Collection<Piece> pieces) {

@@ -20,7 +20,7 @@ public class Bishop extends Piece{
      * @param alliance the team that the bishop is aligned with
      */
     public Bishop(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.BISHOP, alliance, position);
     }
 
     /**

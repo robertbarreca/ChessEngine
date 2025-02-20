@@ -8,7 +8,6 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
-import static  com.chess.engine.board.Move.*;
 
 /**
  * This class represents a single knight on a chessboard
@@ -23,7 +22,7 @@ public class Knight extends Piece {
      * @param alliance the team that the knight is aligned with
      */
     public Knight(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.KNIGHT, alliance, position);
     }
 
     /**

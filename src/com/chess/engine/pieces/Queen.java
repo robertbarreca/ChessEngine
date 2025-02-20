@@ -27,7 +27,7 @@ public class Queen extends Piece{
      * @param alliance the team that the queen is aligned with
      */
     public Queen(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.QUEEN, alliance, position);
     }
 
     /**

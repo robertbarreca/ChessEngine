@@ -24,5 +24,4 @@ public class TestBoard {
         assertEquals(20, whiteLegals.size());
         assertEquals(20, blackLegals.size());
     }
-    
 }

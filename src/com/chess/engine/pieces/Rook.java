@@ -27,7 +27,7 @@ public class Rook extends Piece{
      * @param alliance the team that the rook is aligned with
      */
     public Rook(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.ROOK, alliance, position);
     }
 
     /**

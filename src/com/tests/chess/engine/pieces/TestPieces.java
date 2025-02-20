@@ -73,7 +73,7 @@ public class TestPieces {
     }
 
     @Test
-    public void testPawnAttackingWrap() {
+    public void testAttackingPawnWrapping() {
         // white pawn column H and black pawn column A
         final Board.Builder builder = new Board.Builder();
         Pawn whitePawn = new Pawn(Alliance.WHITE, 47);

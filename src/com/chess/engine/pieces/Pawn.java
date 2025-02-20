@@ -24,7 +24,7 @@ public class Pawn extends Piece{
      * @param alliance the team that the pawn is aligned with
      */
     public Pawn(final Alliance alliance, final int position) {
-        super(alliance, position);
+        super(PieceType.PAWN, alliance, position);
     }
 
     /**
