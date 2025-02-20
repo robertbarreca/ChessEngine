@@ -191,6 +191,17 @@ public class Board {
     }
 
     /**
+     * Gets all moves on the board
+     * @return all legal moves on the board
+     */
+    public Iterable<Move> getAllLegalMoves() {
+        List<Move> allLegalMoves = new ArrayList<>();
+        allLegalMoves.addAll(this.whitePlayer.getLegalMoves());
+        allLegalMoves.addAll(this.blackPlayer.getLegalMoves());
+        return Collections.unmodifiableList(allLegalMoves);
+    }
+
+    /**
      * Gets the tile associated with the passed coordinate
      * @param coord the coordinate on the chess board
      * @return the tile associated with the passed coordinate

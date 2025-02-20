@@ -13,6 +13,7 @@ public abstract class Piece {
     protected final int position;
     protected final Alliance alliance;
     protected final boolean hasMoved;
+    private final int cachedHashCode;
 
     /**
      * Constructor that sets the position and alliance of the piece
@@ -25,6 +26,48 @@ public abstract class Piece {
         this.position = position;
         this.alliance = alliance;
         this.hasMoved = false;
+        this.cachedHashCode = computeHashCode();
+    }
+
+    /**
+     * Computes the hash of a piece
+     * @return the hascode of a piece
+     */
+    private int computeHashCode() {
+        int res = this.pieceType.hashCode();
+        res = 31 * res + this.alliance.hashCode();
+        res = 31 * res + this.position;
+        res = 31 * res + (this.hasMoved ? 1 : 0);
+        return res;
+    }
+    /**
+     * Checks whether to passed object is equivlant to the current piece
+     * @return true if they are both the same type of piece, have the same alliance, have the same position, and both have or have not moved
+     */
+    @Override
+    public boolean equals(final Object other) {
+        // referentially the same
+        if (this == other) {
+            return true;
+        }
+        // not a piece
+        if (!(other instanceof Piece)) {
+            return false;
+        }
+
+        // check member field equality
+        final Piece otherPiece = (Piece) other;
+        return this.position == otherPiece.position && this.pieceType == otherPiece.pieceType
+                && this.alliance == otherPiece.alliance && this.hasMoved == otherPiece.hasMoved;
+    }
+    
+    /**
+     * Gets the hashcode of a piece
+     * @return the hashcode of a piece
+     */
+    @Override
+    public int hashCode() {
+        return this.cachedHashCode;
     }
 
     /**
