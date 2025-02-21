@@ -75,7 +75,7 @@ public class TestBoard {
         assertThrows(RuntimeException.class, () -> builder.build());
         
         // one king on board
-        builder.setPiece(new King(null, 60));
+        builder.setPiece(new King(Alliance.WHITE, 60));
         assertThrows(RuntimeException.class, () -> builder.build());
     }
 }

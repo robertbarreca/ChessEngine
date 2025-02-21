@@ -40,8 +40,10 @@ public abstract class Piece {
         res = 31 * res + (this.hasMoved ? 1 : 0);
         return res;
     }
+    
     /**
      * Checks whether to passed object is equivlant to the current piece
+     * @param other the object we are comparing to
      * @return true if they are both the same type of piece, have the same alliance, have the same position, and both have or have not moved
      */
     @Override
@@ -116,11 +118,20 @@ public abstract class Piece {
         PAWN("P"),
         KNIGHT("N"),
         BISHOP("B"),
-        ROOK("R"),
+        ROOK("R") {
+            /**
+            * Says whether the current piece type is a rook or not
+            * @return true
+            */
+            @Override
+            public boolean isRook() {
+                return true;
+            }
+        },
         QUEEN("Q"),
         KING("K") {
             /**
-            * Says whether the current piece is a king or not
+            * Says whether the current piece type is a king or not
             * @return true
             */
             @Override
@@ -153,6 +164,14 @@ public abstract class Piece {
          * @return false since most pieces aren't kings
          */
         public boolean isKing() {
+            return false;
+        }
+
+        /**
+         * Says whether the current piece is a rook or not
+         * @return false since most pieces aren't rooks
+         */
+        public boolean isRook() {
             return false;
         }
     }

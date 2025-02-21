@@ -28,10 +28,14 @@ public abstract class Player {
      */
     Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
         this.board = board;
-        this.legalMoves = legalMoves;
         this.king = establishKing();
-        // check if any move is attacking the king's position
         this.isInCheck = !Player.calculateAttacksOnTile(this.king.getPosition(), opponentMoves).isEmpty();
+        this.legalMoves = new ArrayList<>(legalMoves);
+        this.legalMoves.addAll(calcCastleMoves(this.legalMoves, opponentMoves));
+        Collections.unmodifiableCollection(this.legalMoves);
+
+        // check if any move is attacking the king's position
+        
     }
 
     /**
@@ -56,7 +60,7 @@ public abstract class Player {
      * @param opponentMoves All moves an opponent can make
      * @return all moves that attack the tile at the passed position
      */
-    private static Collection<Move> calculateAttacksOnTile(int position,
+    protected static Collection<Move> calculateAttacksOnTile(int position,
             Collection<Move> opponentMoves) {
         final List<Move> attackMoves = new ArrayList<>();
         for (Move move : opponentMoves) {
@@ -173,4 +177,6 @@ public abstract class Player {
      * @return the opposing player
      */
     public abstract Player getOpponent();
+
+    protected abstract Collection<Move> calcCastleMoves(Collection<Move>legalMoves,                 Collection<Move> opponentMoves);
 }

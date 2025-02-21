@@ -44,6 +44,14 @@ public abstract class Tile {
     private Tile(final int coord) {
         this.coord = coord;
     }
+
+    /**
+     * Gets the coordinate of the tile
+     * @return the tile coordinate
+     */
+    public int getCoord() {
+        return this.coord;
+    }
     
     
     /**

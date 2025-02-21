@@ -23,6 +23,7 @@ public class TestPieces {
         builder.setPiece(pawn);
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(2, pawn.calcLegalMoves(board).size());
     }
@@ -37,6 +38,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.BLACK, 43));
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(4, attackingPawn.calcLegalMoves(board).size());
 
@@ -63,6 +65,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.BLACK, 35));
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(3, attackingPawn.calcLegalMoves(board).size());
 
@@ -88,6 +91,7 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setPiece(whitePawn);
         builder.setPiece(blackPawn);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(1, whitePawn.calcLegalMoves(board).size());
         assertEquals(1, blackPawn.calcLegalMoves(board).size());
@@ -98,6 +102,7 @@ public class TestPieces {
         blackPawn = new Pawn(Alliance.BLACK, 23);
         builder.setPiece(whitePawn);
         builder.setPiece(blackPawn);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         board = builder.build();
         assertEquals(1, whitePawn.calcLegalMoves(board).size());
         assertEquals(1, blackPawn.calcLegalMoves(board).size());
@@ -112,6 +117,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.WHITE, 34));
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(1, startingPawn.calcLegalMoves(board).size());
         
@@ -135,6 +141,7 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setPiece(knight);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(8, knight.calcLegalMoves(board).size());
     }
@@ -155,6 +162,7 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
 
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
 
         assertEquals(4, knightA.calcLegalMoves(board).size());
@@ -174,6 +182,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.WHITE, 21));
         // attacking piece
         builder.setPiece(new Pawn(Alliance.BLACK, 19));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(7, knight.calcLegalMoves(board).size());
     }
@@ -185,6 +194,7 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setPiece(bishop);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(13, bishop.calcLegalMoves(board).size());
     }
@@ -200,6 +210,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.WHITE, 18));
         // attacking piece
         builder.setPiece(new Pawn(Alliance.BLACK, 22));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(9, bishop.calcLegalMoves(board).size());
     }
@@ -211,6 +222,7 @@ public class TestPieces {
         builder.setPiece(rook);
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(14, rook.calcLegalMoves(board).size());
     }
@@ -227,6 +239,7 @@ public class TestPieces {
         // attacking piece
         builder.setPiece(new Pawn(Alliance.WHITE, 33));
 
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
         assertEquals(11, rook.calcLegalMoves(board).size());
     }
@@ -238,6 +251,7 @@ public class TestPieces {
         builder.setPiece(queen);
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(27, queen.calcLegalMoves(board).size());
     }
@@ -253,6 +267,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.BLACK, 12));
         // attacking piece
         builder.setPiece(new Pawn(Alliance.WHITE, 33));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(24, queen.calcLegalMoves(board).size());
     }
@@ -263,6 +278,7 @@ public class TestPieces {
         King whiteKing = new King(Alliance.WHITE, 36);
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setPiece(whiteKing);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(8, whiteKing.calcLegalMoves(board).size());
     }
@@ -274,6 +290,7 @@ public class TestPieces {
         King kingH = new King(Alliance.BLACK, 39);
         builder.setPiece(kingA);
         builder.setPiece(kingH);
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(5, kingA.calcLegalMoves(board).size());
         assertEquals(5, kingH.calcLegalMoves(board).size());
@@ -289,6 +306,7 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.WHITE, 35));
         // attacking piece
         builder.setPiece(new Pawn(Alliance.BLACK, 37));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
         assertEquals(7, king.calcLegalMoves(board).size());
     }

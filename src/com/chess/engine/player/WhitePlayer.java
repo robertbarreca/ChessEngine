@@ -1,11 +1,18 @@
 package com.chess.engine.player;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.KingSideCastleMove;
+import com.chess.engine.board.Move.QueenSideCastleMove;
+import com.chess.engine.board.Tile;
 import com.chess.engine.pieces.Piece;
+import com.chess.engine.pieces.Rook;
 
 public class WhitePlayer extends Player{
 
@@ -44,6 +51,57 @@ public class WhitePlayer extends Player{
     @Override
     public Player getOpponent() {
         return this.board.getBlackPlayer();
+    }
+
+    /**
+     * Finds all the castle moves the white player can make
+     * @param legalMoves the moves that white can make
+     * @param opponentMoves the moves that black can make
+     * @return all the castle moves the white player can make
+     */
+    @Override
+    protected Collection<Move> calcCastleMoves(final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
+        final List<Move> castleMoves = new ArrayList<>();
+        // king hasn't moved nor is in check
+        if (!this.king.hasMoved() && !this.isInCheck()) {
+            // king side castle
+            // check no pieces are in between
+            if (!this.board.getTile(61).isOccupied() && !this.board.getTile(62).isOccupied()) {
+                final Tile rookTile = this.board.getTile(63);
+                // check piece is rook and piece hasn't moved
+                if (rookTile.isOccupied() &&
+                    rookTile.getPiece().getPieceType().isRook() &&
+                    !rookTile.getPiece().hasMoved()) {
+                    // check not castling thru check
+                    if (calculateAttacksOnTile(61, opponentMoves).isEmpty() &&
+                        calculateAttacksOnTile(62, opponentMoves).isEmpty()) {
+                        castleMoves.add(new KingSideCastleMove(this.board, this.king, 62, (Rook) rookTile.getPiece(), rookTile.getCoord(), 61));
+                    }
+                }
+            }
+            
+            // queen side castle
+            // check no pieces are in between
+            if (!this.board.getTile(59).isOccupied() &&
+                !this.board.getTile(58).isOccupied() &&
+                !this.board.getTile(57).isOccupied()) {
+                final Tile rookTile = this.board.getTile(56);
+                // check piece is rook and piece hasn't moved
+                if (rookTile.isOccupied() &&
+                    rookTile.getPiece().getPieceType().isRook() &&
+                    !rookTile.getPiece().hasMoved()) {
+                    // check not castling thru check
+                    if (calculateAttacksOnTile(59, opponentMoves).isEmpty() &&
+                        calculateAttacksOnTile(58, opponentMoves).isEmpty() &&
+                        calculateAttacksOnTile(57, opponentMoves).isEmpty()) {
+                        // TODO: create castle move
+                        castleMoves.add(new QueenSideCastleMove(this.board, this.king, 58, (Rook) rookTile.getPiece(), rookTile.getCoord(), 59));
+                    }
+                }
+            }
+        }
+
+        return Collections.unmodifiableList(castleMoves);
     }
     
 }
