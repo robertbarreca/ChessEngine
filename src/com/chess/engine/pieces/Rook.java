@@ -22,12 +22,21 @@ public class Rook extends Piece{
 
 
     /**
-     * Constructor that sets the position and the alliance of the rook
+     * Constructor that sets the position and the alliance of the rook based on the passed params. It also sets the hasMoved field to false
      * @param position the position the rook is in 
      * @param alliance the team that the rook is aligned with
      */
     public Rook(final Alliance alliance, final int position) {
-        super(PieceType.ROOK, alliance, position);
+        super(PieceType.ROOK, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the rook based on the passed params.
+     * @param position the position the rook is in 
+     * @param alliance the team that the rook is aligned with
+     */
+    public Rook(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.ROOK, alliance, position, hasMoved);
     }
 
     /**

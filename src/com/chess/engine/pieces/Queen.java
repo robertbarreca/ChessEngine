@@ -22,12 +22,21 @@ public class Queen extends Piece{
 
 
     /**
-     * Constructor that sets the position and the alliance of the queen
+     * Constructor that sets the position and the alliance of the queen based on the passed params. It also sets the hasMoved field to false
      * @param position the position the queen is in 
      * @param alliance the team that the queen is aligned with
      */
     public Queen(final Alliance alliance, final int position) {
-        super(PieceType.QUEEN, alliance, position);
+        super(PieceType.QUEEN, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the queen based on the passed params.
+     * @param position the position the queen is in 
+     * @param alliance the team that the queen is aligned with
+     */
+    public Queen(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.QUEEN, alliance, position, hasMoved);
     }
 
     /**

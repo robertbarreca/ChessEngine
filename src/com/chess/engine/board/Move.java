@@ -9,9 +9,10 @@ import com.chess.engine.pieces.Rook;
  */
 public abstract class Move {
 
-    final Board board;
-    final Piece movedPiece;
-    final int destCoord;
+    protected final Board board;
+    protected final Piece movedPiece;
+    protected final int destCoord;
+    protected final boolean isFirstMove;
 
     public static final Move NULL_MOVE = new NullMove();
     /**
@@ -24,6 +25,19 @@ public abstract class Move {
         this.board = board;
         this.movedPiece = movedPiece;
         this.destCoord = destCoord;
+        this.isFirstMove = !movedPiece.hasMoved();
+    }
+
+    /**
+     * Convenience constructor for a null move
+     * @param board the board the move is being played on
+     * @param destCoord the destination of the piece
+     */
+    private Move(final Board board, final int destCoord) {
+        this.board = board;
+        this.destCoord = destCoord;
+        this.movedPiece = null;
+        this.isFirstMove = false;
     }
 
     /**
@@ -37,6 +51,7 @@ public abstract class Move {
 
         res = prime * res + this.destCoord;
         res = prime * res + this.movedPiece.hashCode();
+        res = prime * res + this.movedPiece.getPosition();
         return res;
     }
 
@@ -55,7 +70,8 @@ public abstract class Move {
         }
 
         final Move otherMove = (Move) other;
-        return this.getDestCoord() == otherMove.getDestCoord() &&
+        return this.getStartingCoord() == otherMove.getStartingCoord() &&
+                this.getDestCoord() == otherMove.getDestCoord() &&
                 this.getMovedPiece().equals(otherMove.getMovedPiece());
     }
     /**
@@ -172,6 +188,27 @@ public abstract class Move {
         public PassiveMove(final Board board, final Piece movedPiece, final int destCoord) {
             super(board, movedPiece, destCoord);
         }
+
+
+        /**
+         * Checks whether to passed object is equivlant to the current passive move
+         * @param other the object we are comparing to
+         * @return true if they are both moves that have the same moved piece and destination and false otherwise
+         */
+        @Override
+        public boolean equals(Object other) {
+            return this == other || (other instanceof PassiveMove && super.equals(other));
+        }
+
+        // TODO: write function to convert from coord to position
+        /**
+         * Converts the passive move to it's string representation
+         * @return the string representation of a passive move
+         */
+        // @Override
+        // public String toString() {
+        //     return movedPiece.getPieceType().toString() + BoardUtils.getPosAtCoord(this.destCoord);
+        // }
     }
 
     /**

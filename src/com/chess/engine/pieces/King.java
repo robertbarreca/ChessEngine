@@ -20,12 +20,21 @@ public class King extends Piece{
     private static final int[] CANDIDATE_MOVE_OFFSETS = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
     /**
-     * Constructor that sets the position and the alliance of the king
+     * Constructor that sets the position and the alliance of the king based on the passed params. It also sets the hasMoved field to false
      * @param position the position the king is in 
      * @param alliance the team that the king is aligned with
      */
     public King(final Alliance alliance, final int position) {
-        super(PieceType.KING, alliance, position);
+        super(PieceType.KING, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the king based on the passed params.
+     * @param position the position the king is in 
+     * @param alliance the team that the king is aligned with
+     */
+    public King(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.KING, alliance, position, hasMoved);
     }
 
     /**

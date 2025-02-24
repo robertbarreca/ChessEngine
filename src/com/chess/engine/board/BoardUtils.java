@@ -63,6 +63,10 @@ public class BoardUtils {
      * @return true if the coordinate is in bounds, and false otherwise.
      */
     public static boolean isValidTileCoord(final int coord) {
-            return coord >= 0 && coord < NUM_TILES;
-        }
+        return coord >= 0 && coord < NUM_TILES;
+    }
+    
+    // public static int getPosAtCoord() {
+        
+    // }
 }

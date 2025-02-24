@@ -15,12 +15,21 @@ public class Bishop extends Piece{
     private static final int[] CANDIDATE_MOVE_OFFSETS = { -9, -7, 7, 9 };
 
     /**
-     * Constructor that sets the position and the alliance of the bishop
+     * Constructor that sets the position and the alliance of the bishop based on the passed params. It also sets the hasMoved field to false
      * @param position the position the bishop is in 
      * @param alliance the team that the bishop is aligned with
      */
     public Bishop(final Alliance alliance, final int position) {
-        super(PieceType.BISHOP, alliance, position);
+        super(PieceType.BISHOP, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the bishop based on the passed params.
+     * @param position the position the bishop is in 
+     * @param alliance the team that the bishop is aligned with
+     */
+    public Bishop(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.BISHOP, alliance, position, hasMoved);
     }
 
     /**

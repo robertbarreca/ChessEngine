@@ -17,12 +17,21 @@ public class Knight extends Piece {
     private final static int[] CANDIDATE_MOVE_OFFSETS = { -17, -15, -10, -6, 6, 10, 15, 17 };
 
     /**
-     * Constructor that sets the position and the alliance of the knight
+     * Constructor that sets the position and the alliance of the knight based on the passed params. It also sets the hasMoved field to false
      * @param position the position the knight is in 
      * @param alliance the team that the knight is aligned with
      */
     public Knight(final Alliance alliance, final int position) {
-        super(PieceType.KNIGHT, alliance, position);
+        super(PieceType.KNIGHT, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the knight based on the passed params.
+     * @param position the position the knight is in 
+     * @param alliance the team that the knight is aligned with
+     */
+    public Knight(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.KNIGHT, alliance, position, hasMoved);
     }
 
     /**

@@ -20,12 +20,13 @@ public abstract class Piece {
      * 
      * @param position the location on a chessboard
      * @param alliance the team the piece is aligned with
+     * @param hasMoved says whether the piece has moved or not
      */
-    Piece(final PieceType pieceType, final Alliance alliance, final int position) {
+    Piece(final PieceType pieceType, final Alliance alliance, final int position, final boolean hasMoved) {
         this.pieceType = pieceType;
         this.position = position;
         this.alliance = alliance;
-        this.hasMoved = false;
+        this.hasMoved = hasMoved;
         this.cachedHashCode = computeHashCode();
     }
 

@@ -25,4 +25,12 @@ public class MoveTransition {
     public MoveStatus getMoveStatus() {
         return this.moveStatus;
     }
+
+    /**
+     * Gets the board based on the move made
+     * @return the transition board
+     */
+    public Board getTransitionBoard() {
+        return this.transitionBoard;
+    }
 }

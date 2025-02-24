@@ -11,6 +11,8 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
+import com.chess.engine.board.Move.PawnAttackMove;
+import com.chess.engine.board.Move.PawnJumpMove;
 
 /**
  * This class represents a single pawn on a chessboard
@@ -19,12 +21,21 @@ public class Pawn extends Piece{
     private static final int[] CANDIDATE_MOVE_OFFSETS = { 7, 8, 9, 16 };
 
     /**
-     * Constructor that sets the position and the alliance of the pawn
+     * Constructor that sets the position and the alliance of the pawn based on the passed params. It also sets the hasMoved field to false
      * @param position the position the pawn is in 
      * @param alliance the team that the pawn is aligned with
      */
     public Pawn(final Alliance alliance, final int position) {
-        super(PieceType.PAWN, alliance, position);
+        super(PieceType.PAWN, alliance, position, false);
+    }
+
+    /**
+     * Constructor that sets the position, alliance, and has moved fields of the pawn based on the passed params.
+     * @param position the position the pawn is in 
+     * @param alliance the team that the pawn is aligned with
+     */
+    public Pawn(final Alliance alliance, final int position, final boolean hasMoved) {
+        super(PieceType.PAWN, alliance, position, hasMoved);
     }
 
     /**
@@ -44,7 +55,6 @@ public class Pawn extends Piece{
             // regular pawn move if tile is unocuppied
             if (offset == 8 && !board.getTile(destCoord).isOccupied()) {
                 legalMoves.add(new PassiveMove(board, this, destCoord));
-                System.out.print("passive move 1 square");
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&
@@ -54,7 +64,7 @@ public class Pawn extends Piece{
                 // two tiles in front aren't occupied
                 if (!board.getTile(behindDestCoord).isOccupied() &&
                         !board.getTile(destCoord).isOccupied()) {
-                    legalMoves.add(new PassiveMove(board, this, destCoord));
+                    legalMoves.add(new PawnJumpMove(board, this, destCoord));
                 }
             }
             // atacking move on diagonal
@@ -66,7 +76,7 @@ public class Pawn extends Piece{
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
-                        legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
+                        legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
                     }
                 }
             }
@@ -79,7 +89,7 @@ public class Pawn extends Piece{
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
-                        legalMoves.add(new AttackMove(board, this, destCoord, pieceOnTile));
+                        legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
                     }
                 }
             }
