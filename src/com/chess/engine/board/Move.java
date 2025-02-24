@@ -161,12 +161,9 @@ public abstract class Move {
     public static final class NullMove extends Move {
         /**
          * Constructor for a null move
-         * @param board the board the move is being played on
-         * @param movedPiece the piece being moved
-         * @param destCoord the destination of the piece
          */
         public NullMove() {
-            super(null, null, -1);
+            super(null, -1);
         }
 
         @Override
