@@ -92,9 +92,7 @@ public class WhitePlayer extends Player{
                     !rookTile.getPiece().hasMoved()) {
                     // check not castling thru check
                     if (calculateAttacksOnTile(59, opponentMoves).isEmpty() &&
-                        calculateAttacksOnTile(58, opponentMoves).isEmpty() &&
-                        calculateAttacksOnTile(57, opponentMoves).isEmpty()) {
-                        // TODO: create castle move
+                        calculateAttacksOnTile(58, opponentMoves).isEmpty()) {
                         castleMoves.add(new QueenSideCastleMove(this.board, this.king, 58, (Rook) rookTile.getPiece(), rookTile.getCoord(), 59));
                     }
                 }

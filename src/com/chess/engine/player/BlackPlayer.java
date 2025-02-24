@@ -92,8 +92,7 @@ public class BlackPlayer extends Player{
                         !rookTile.getPiece().hasMoved()) {
                     // check not castling thru check
                     if (calculateAttacksOnTile(3, opponentMoves).isEmpty() &&
-                            calculateAttacksOnTile(2, opponentMoves).isEmpty() &&
-                            calculateAttacksOnTile(1, opponentMoves).isEmpty()) {
+                            calculateAttacksOnTile(2, opponentMoves).isEmpty()) {
                         castleMoves.add(new QueenSideCastleMove(this.board, this.king, 2, (Rook) rookTile.getPiece(), rookTile.getCoord(), 3));
                     }
                 }

@@ -11,8 +11,14 @@ public class BoardUtils {
     public static final boolean[] COLUMN_G = initColumn(6);
     public static final boolean[] COLUMN_H = initColumn(7);
 
-    public static final boolean[] ROW_2 = initRow(8);
-    public static final boolean[] ROW_7 = initRow(48);
+    public static final boolean[] RANK_8 = initRow(0);
+    public static final boolean[] RANK_7 = initRow(8);
+    public static final boolean[] RANK_6 = initRow(16);
+    public static final boolean[] RANK_5 = initRow(24);
+    public static final boolean[] RANK_4 = initRow(32);
+    public static final boolean[] RANK_3 = initRow(40);
+    public static final boolean[] RANK_2 = initRow(48);
+    public static final boolean[] RANK_1 = initRow(56);
     
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;

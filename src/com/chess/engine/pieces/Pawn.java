@@ -48,8 +48,8 @@ public class Pawn extends Piece{
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&
-                    ((BoardUtils.ROW_2[this.position] && this.alliance.isBlack()) ||
-                    (BoardUtils.ROW_7[this.position] && this.alliance.isWhite()))) {
+                    ((BoardUtils.RANK_7[this.position] && this.alliance.isBlack()) ||
+                    (BoardUtils.RANK_2[this.position] && this.alliance.isWhite()))) {
                 final int behindDestCoord = this.position + (8 * this.alliance.getPawnDirection());
                 // two tiles in front aren't occupied
                 if (!board.getTile(behindDestCoord).isOccupied() &&
