@@ -343,7 +343,6 @@ public class Table {
                         humanMovedPiece = null;
                     }
                     else if (isLeftMouseButton(e)) {
-                        System.out.println(tileId);
                         // first click selecting source tile
                         if (srcTile == null) {
                             srcTile = chessBoard.getTile(tileId);
@@ -428,7 +427,7 @@ public class Table {
                         try {
                             this.add(new JLabel(new ImageIcon(ImageIO.read(new File("art/misc/green_dot.png")))));
                         } catch (Exception e) {
-                            System.out.println("can't read file");
+                            e.printStackTrace();
                         }
                     }
                 }

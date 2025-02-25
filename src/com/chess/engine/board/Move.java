@@ -300,7 +300,7 @@ public abstract class Move {
          */
         @Override
         public String toString() {
-            return BoardUtils.getPosAtCoord(this.destCoord);
+            return BoardUtils.getPosFromCoord(this.destCoord);
         }
     }
 
