@@ -43,6 +43,7 @@ public class Table {
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private Board chessBoard;
+    private final MoveLog moveLog;
 
     private Tile srcTile;
     private Tile destTile;
@@ -73,9 +74,12 @@ public class Table {
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = true;
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
     }
         
@@ -358,6 +362,7 @@ public class Table {
                             // if legal move make new chessboard based on move
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
+                                moveLog.addMove(move);
                             }
                             // clear selections
                             srcTile = null;
@@ -367,7 +372,10 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable(){
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(chessBoard);
+
                             }
                         });
                     }

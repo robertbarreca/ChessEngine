@@ -30,7 +30,7 @@ public class GameHistoryPanel extends JPanel{
         final JTable table = new JTable(this.model);
         table.setRowHeight(15);
         this.scrollPane = new JScrollPane(table);
-        this.scrollPane.setColumnHeaderView(table);
+        this.scrollPane.setColumnHeaderView(table.getTableHeader());
         this.scrollPane.setPreferredSize(HISTORY_PANEL_DIMENSION);
         this.add(scrollPane, BorderLayout.CENTER);
         this.setVisible(true);
@@ -122,6 +122,7 @@ public class GameHistoryPanel extends JPanel{
             }
             if (column == 0) {
                 currRow.setWhiteMove((String) aValue);
+                fireTableRowsInserted(row, row);
             } else if (column == 1) {
                 currRow.setBlackMove((String) aValue);
                 fireTableCellUpdated(row, column);

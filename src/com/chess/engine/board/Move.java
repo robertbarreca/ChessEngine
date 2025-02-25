@@ -293,6 +293,15 @@ public abstract class Move {
         public PawnMove(final Board board, final Piece movedPiece, final int destCoord) {
             super(board, movedPiece, destCoord);
         }
+
+        /**
+         * Get's the string representation of a pawn move
+         * @return the string representation of a pawn move
+         */
+        @Override
+        public String toString() {
+            return BoardUtils.getPosAtCoord(this.destCoord);
+        }
     }
 
     /**
