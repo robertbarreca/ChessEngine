@@ -39,6 +39,8 @@ import java.util.List;
 
 public class Table {
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private Board chessBoard;
 
@@ -68,6 +70,8 @@ public class Table {
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.chessBoard = Board.createStandardBoard();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = true;
@@ -116,8 +120,13 @@ public class Table {
         return fileMenu;
     }
     
+     /**
+     * Creates the file preferences menu item for the table bar and gives it actions it can do
+     * @return the preferences menu item
+     */
     private JMenu createPreferencesMenu() {
         final JMenu preferencesMenu = new JMenu("Preferences");
+        // create flip board menu item
         final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
         flipBoardMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -127,6 +136,7 @@ public class Table {
         }
         });
         
+        // create highlight legal moves menu item
         final JCheckBoxMenuItem legalMovesHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", true);
         
         legalMovesHighlighterCheckbox.addActionListener(new ActionListener() {
@@ -136,37 +146,69 @@ public class Table {
             }
         });
 
+        // add created items
         preferencesMenu.add(flipBoardMenuItem);
         preferencesMenu.add(legalMovesHighlighterCheckbox);
         return preferencesMenu;
     }
     
+    /**
+     * Enum that represents the direction the board is facing
+     */
     public enum BoardDirection{
-        NORMAL{
+        NORMAL {
+            /**
+             * Gets the the board's tile panels based on the board directions order
+             * @param boardTiles the gui representation of the tile panels
+             * @return the the board's tile panels in order
+             */
             @Override
             List<TilePanel> traverse(List<TilePanel> boardTiles) {
                 return boardTiles;
             }
 
+            /**
+             * Get's the opposite board direction
+             * @return the flipped board direction
+             */
             @Override
             BoardDirection opposite() {
                 return FLIPPED;
             }
             
         },
-        FLIPPED{
+        FLIPPED {
+            
+            /**
+             * Gets the the board's tile panels based on the board directions order
+             * @param boardTiles the gui representation of the tile panels
+             * @return the the board's tile panels in reversed order
+             */
             @Override
             List<TilePanel> traverse(List<TilePanel> boardTiles) {
                 return Lists.reverse(boardTiles);
             }
 
+        /**
+         * Get's the opposite board direction
+         * @return the normal board direction
+         */
             @Override
             BoardDirection opposite() {
                 return NORMAL;
             }
 
         };
+        /**
+         * Gets the the board's tile panels based on the board directions order
+         * @param boardTiles the gui representation of the tile panels
+         * @return the the board's tile panels based on the board directions order
+         */
         abstract List<TilePanel> traverse(final List<TilePanel> boardTiles);
+        /**
+         * Get's the opposite board direction
+         * @return the opposite board direction
+         */
         abstract BoardDirection opposite();
     }
 
@@ -191,6 +233,10 @@ public class Table {
             this.validate();
         }
 
+        /**
+         * draws all the board's tile panels
+         * @param board the board the gui is drawing
+         */
         public void drawBoard(final Board board) {
             this.removeAll();
             for (final TilePanel tilePanel : boardDirection.traverse(boardTiles)) {
@@ -199,6 +245,69 @@ public class Table {
                 this.validate();
                 repaint();
             }
+        }
+    }
+
+    /**
+     * This class represents all the moves made in a chess game
+     */
+    public static class MoveLog {
+        private final List<Move> moves;
+
+        /**
+         * Constructor that creates the move log to an empty array list
+         */
+        MoveLog() {
+            this.moves = new ArrayList<>();
+        }
+
+        /**
+         * Gets all moves made in a game
+         * @return an arraylist representation moves made in a game
+         */
+        public List<Move> getMoves() {
+            return this.moves;
+        }
+
+        /**
+         * Adds a move that was made in a game
+         * @param move the move to be added
+         */
+        public void addMove(Move move) {
+            this.moves.add(move);
+        }
+
+        /**
+         * Gets the number of moves made in a game
+         * @return the number of moves made in a game
+         */
+        public int size() {
+            return this.moves.size();
+        }
+
+        /**
+         * Clears all moves made
+         */
+        public void clear() {
+            this.moves.clear();
+        }
+
+        /**
+         * Removes a move based on the index
+         * @param index the index which the move is being removed at
+         * @return the move being removed
+         */
+        public Move removeMove(int index) {
+            return this.moves.remove(index);
+        }
+
+        /**
+         * Removes a specific move
+         * @param move the move to be removed
+         * @return true if the removal was succesful and fals otherwise
+         */
+        public boolean removeMove(Move move) {
+            return this.moves.remove(move);
         }
     }
     
@@ -288,6 +397,10 @@ public class Table {
             this.validate();
         }
 
+        /**
+         * draws the tile panel on the gui
+         * @param board the board the tile panel is referencing
+         */
         public void drawTile(final Board board) {
             assignTileColor();
             assignTilePieceIcon(board);
@@ -296,6 +409,10 @@ public class Table {
             this.repaint();
         }
 
+        /**
+         * Highlights all legal moves for the tile selected
+         * @param board the board referenced to find legal moves
+         */
         private void highlightLegalMoves(final Board board) {
             if (highlightLegalMoves) {
                 for (final Move move : pieceLegalMoves(board)) {
@@ -310,6 +427,11 @@ public class Table {
             }
         }
         
+        /**
+         * Finds all legal moves for the tile selected
+         * @param board the board referenced to find legal moves
+         * @return a collection of all legal moves for this tile
+         */
         private Collection<Move> pieceLegalMoves(final Board board) {
             if (humanMovedPiece != null && humanMovedPiece.getAlliance() == board.getCurrPlayer().getAlliance()) {
                 return humanMovedPiece.calcLegalMoves(board);
@@ -317,6 +439,9 @@ public class Table {
             return Collections.emptyList();
         }
             
+        /**
+         * Assigns the tile a color based on it's position
+         */
         private void assignTileColor() {
             // odd rows tile color
             if (BoardUtils.RANK_8[this.tileId] ||
@@ -335,6 +460,10 @@ public class Table {
             }
         }
 
+        /**
+         * Assings the tile a piece icon based on the passed board
+         * @param board the board referenced
+         */
         private void  assignTilePieceIcon(final Board board) {
             this.removeAll();
             if (board.getTile(this.tileId).isOccupied()) {

@@ -97,8 +97,16 @@ public abstract class Piece {
         return this.position;
     }
     
+    /**
+     * gets the piece's type
+     * @return the piece's type
+     */
     public PieceType getPieceType() {
         return this.pieceType;
+    }
+
+    public int getValue() {
+        return this.pieceType.getValue();
     }
     
     /**
@@ -116,10 +124,10 @@ public abstract class Piece {
     public abstract Piece movePiece(Move move);
 
     public enum PieceType {
-        PAWN("P"),
-        KNIGHT("N"),
-        BISHOP("B"),
-        ROOK("R") {
+        PAWN("P", 100),
+        KNIGHT("N", 300),
+        BISHOP("B", 300),
+        ROOK("R", 500) {
             /**
             * Says whether the current piece type is a rook or not
             * @return true
@@ -129,8 +137,8 @@ public abstract class Piece {
                 return true;
             }
         },
-        QUEEN("Q"),
-        KING("K") {
+        QUEEN("Q", 900),
+        KING("K", 10000) {
             /**
             * Says whether the current piece type is a king or not
             * @return true
@@ -142,13 +150,16 @@ public abstract class Piece {
         };
 
         private String pieceName;
+        private int value;
 
         /**
          * Constructor that sets the type of the piece
          * @param pieceName the name of the piece
+         * @param value the value of a piece type
          */
-        PieceType(final String pieceName) {
+        PieceType(final String pieceName, final int value) {
             this.pieceName = pieceName;
+            this.value = value;
         }
 
         /**
@@ -158,6 +169,10 @@ public abstract class Piece {
         @Override
         public String toString() {
             return this.pieceName;
+        }
+
+        public int getValue() {
+            return this.value;
         }
 
         /**
