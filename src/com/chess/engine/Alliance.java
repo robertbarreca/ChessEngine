@@ -14,6 +14,15 @@ public enum Alliance {
         public int getPawnDirection() {
             return -1;
         }
+
+        /**
+         * Gets the number that corresponds to the opposite direction thatpawns move in
+         * @return the number that corresponds to the oppposite direction that pawns move in
+         */
+        @Override
+        public int getOppositePawnDirection() {
+            return 1;
+        }
         
         /**
          * Says whether the piece is white or not
@@ -49,6 +58,15 @@ public enum Alliance {
         }
 
         /**
+         * Gets the number that corresponds to the opposite direction that pawns move in
+         * @return the number that corresponds to the opposite direction that pawns move in
+         */
+        @Override
+        public int getOppositePawnDirection() {
+            return -1;
+        }
+
+        /**
          * Says whether the piece is white or not
          * @return false since the piece is black
          */
@@ -69,10 +87,11 @@ public enum Alliance {
         @Override
         public  Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return blackPlayer;
-        } 
+        }
     };   
     
     public abstract int getPawnDirection();
+    public abstract int getOppositePawnDirection();
     public abstract boolean isWhite();
     public abstract boolean isBlack();
     public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);

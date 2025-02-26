@@ -10,6 +10,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.PawnAttackMove;
+import com.chess.engine.board.Move.PawnEnPassantAttackMove;
 import com.chess.engine.board.Move.PawnJumpMove;
 import com.chess.engine.board.Move.PawnMove;
 
@@ -79,6 +80,16 @@ public class Pawn extends Piece{
                         legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
                     }
                 }
+                // check for en passant play
+                else if(board.getEnPassantPawn() != null){
+                    if (board.getEnPassantPawn()
+                            .getPosition() == (this.position + this.getAlliance().getOppositePawnDirection())) {
+                        final Piece pieceOnTile = board.getEnPassantPawn();
+                        if (this.alliance != pieceOnTile.getAlliance()) {
+                            legalMoves.add(new PawnEnPassantAttackMove(board, this, destCoord, pieceOnTile));
+                        }
+                    }
+                }
             }
             // atacking move on diagonal
             else if (offset == 9 &&
@@ -90,6 +101,15 @@ public class Pawn extends Piece{
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
                         legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
+                    }
+                }
+                else if(board.getEnPassantPawn() != null){
+                    if (board.getEnPassantPawn()
+                            .getPosition() == (this.position + this.getAlliance().getPawnDirection())) {
+                        final Piece pieceOnTile = board.getEnPassantPawn();
+                        if (this.alliance != pieceOnTile.getAlliance()) {
+                            legalMoves.add(new PawnEnPassantAttackMove(board, this, destCoord, pieceOnTile));
+                        }
                     }
                 }
             }

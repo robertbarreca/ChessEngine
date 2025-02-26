@@ -30,6 +30,7 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currPlayer;
+    private final Pawn enPassantPawn;
 
 
 
@@ -41,6 +42,8 @@ public class Board {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calcActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calcActivePieces(this.gameBoard, Alliance.BLACK);
+
+        this.enPassantPawn = builder.enPassantPawn;
 
         final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
         final Collection<Move> blackMoves = calcMoves(this.blackPieces);
@@ -90,6 +93,19 @@ public class Board {
         return this.currPlayer;
     }
 
+    /**
+     * Gets the en passant pawn on the board if it exists
+     * @return the en passant pawn if it exists otherwise null
+     */
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
+    }
+
+    /**
+     * Finds all legal moves for a collection of pieces
+     * @param pieces the pieces we are finding legal moves for
+     * @return all legal moves for all the pieces
+     */
     public Collection<Move> calcMoves(final Collection<Piece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final Piece p: pieces){
