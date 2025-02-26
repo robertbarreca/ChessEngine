@@ -131,6 +131,14 @@ public abstract class Move {
     }
 
     /**
+     * Gets the board the move is made on 
+     * @return the board the move is made on
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
+    /**
      * This method rebuilds the board based on the move made
      * @return the new board based on the move
      */
@@ -337,7 +345,87 @@ public abstract class Move {
                 return this == other || (other instanceof PawnMove && super.equals(other));
             }
         }
+        
     
+        public static class PawnPromotion extends Move {
+            final Move decoratedMove;
+            final Pawn promotedPawn;
+
+
+            public PawnPromotion(final Move decoratedMove) {
+                super(decoratedMove.getBoard(), decoratedMove.getMovedPiece(), decoratedMove.getDestCoord());
+                this.decoratedMove = decoratedMove;
+                this.promotedPawn = (Pawn) decoratedMove.getMovedPiece();
+            }
+
+            /**
+             * Gets the hashcode of the pawn promotion move
+             * @return the hashcode of the pawn promotion move
+             */
+            @Override
+            public int hashCode() {
+                return decoratedMove.hashCode() + (31 * promotedPawn.hashCode());
+            }
+
+            /**
+             * Says if an object is equal to this pawn promotion move
+             * @param other the object we are comparing to 
+             * @return true if they are equivlant and false otherwise
+             */
+            @Override
+            public boolean equals(Object other) {
+                return this == other || (other instanceof PawnPromotion && super.equals(other));
+            }
+
+            @Override 
+            public Board execute() {
+                final Board pawnMovedBoard = this.decoratedMove.execute();
+                final Board.Builder builder = new Board.Builder();
+                for (final Piece piece : pawnMovedBoard.getCurrPlayer().getActivePieces()) {
+                    if (!this.promotedPawn.equals(piece)) {
+                        builder.setPiece(piece);
+                    }
+                }
+
+                for (final Piece piece : pawnMovedBoard.getCurrPlayer().getOpponent().getActivePieces()) {
+                    builder.setPiece(piece);
+                }
+
+                builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
+                builder.setCurrPlayerAlliance(pawnMovedBoard.getCurrPlayer().getAlliance());
+                return builder.build();
+            }
+
+            /**
+             * Says whether the move is attacking or not
+             * @return true if it is an attacking move and false otherwise
+             */
+            @Override
+            public boolean isAttackingMove() {
+                return this.decoratedMove.isAttackingMove();
+            }
+
+            /**
+             * Gets the piece captured from the move made
+             * @return the piece captured if one exists otherwise null
+             */
+            @Override
+            public Piece getCapturedPiece() {
+                return this.decoratedMove.getCapturedPiece();
+            }
+
+            /**
+             * Gets the string representation of a pawn promotion move
+             * @return the string representation of a pawn promotion move
+             */
+            @Override
+            public String toString() {
+                return "";
+            }
+
+             
+        }
+
         /**
          * This class represents a pawn jump move on a chessboard
          */

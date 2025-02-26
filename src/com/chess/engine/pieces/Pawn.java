@@ -13,6 +13,7 @@ import com.chess.engine.board.Move.PawnAttackMove;
 import com.chess.engine.board.Move.PawnEnPassantAttackMove;
 import com.chess.engine.board.Move.PawnJumpMove;
 import com.chess.engine.board.Move.PawnMove;
+import com.chess.engine.board.Move.PawnPromotion;
 
 /**
  * This class represents a single pawn on a chessboard
@@ -54,8 +55,13 @@ public class Pawn extends Piece{
             }
             // regular pawn move if tile is unocuppied
             if (offset == 8 && !board.getTile(destCoord).isOccupied()) {
-                legalMoves.add
-                (new PawnMove(board, this, destCoord));
+                // check for pawn promotion
+                if (this.alliance.isPawnPromotionSquare(destCoord)) {
+                    legalMoves.add(new PawnPromotion(new PawnMove(board, this, destCoord)));
+                }
+                else {
+                    legalMoves.add(new PawnMove(board, this, destCoord));
+                }
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&
@@ -77,7 +83,14 @@ public class Pawn extends Piece{
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
-                        legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
+                        // check for pawn promotion
+                        System.out.println("check for attacking promotion");
+                        if (this.alliance.isPawnPromotionSquare(destCoord)) {
+                            legalMoves.add(new PawnPromotion(new PawnAttackMove(board, this, destCoord, pieceOnTile)));
+                        }
+                        else {
+                            legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
+                        }
                     }
                 }
                 // check for en passant play
@@ -100,9 +113,16 @@ public class Pawn extends Piece{
                     // check if piece is capturable
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
-                        legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
+                        // check for pawn promotion
+                        if (this.alliance.isPawnPromotionSquare(destCoord)) {
+                            legalMoves.add(new PawnPromotion(new PawnAttackMove(board, this, destCoord, pieceOnTile)));
+                        }
+                        else {
+                            legalMoves.add(new PawnAttackMove(board, this, destCoord,  pieceOnTile));
+                        }
                     }
                 }
+                // check for en passant play
                 else if(board.getEnPassantPawn() != null){
                     if (board.getEnPassantPawn()
                             .getPosition() == (this.position + this.getAlliance().getPawnDirection())) {
@@ -134,5 +154,9 @@ public class Pawn extends Piece{
     @Override
     public Pawn movePiece(Move move) {
         return new Pawn(move.getMovedPiece().getAlliance(), move.getDestCoord());
+    }
+
+    public Piece getPromotionPiece() {
+        return new Queen(this.alliance, this.position, false);
     }
 }

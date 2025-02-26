@@ -1,5 +1,6 @@
 package com.chess.engine;
 
+import com.chess.engine.board.BoardUtils;
 import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
@@ -46,6 +47,16 @@ public enum Alliance {
         public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return whitePlayer;
         }
+
+        /**
+         * Given a position says whether the passed tile is used for pawn promotion for the white player
+         * @param position the position of the tile we are checking
+         * @return true if it is used for pawn promotion and false otherwise
+         */
+        @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return BoardUtils.RANK_8[position];
+        }
     },    
     BLACK {
         /**
@@ -88,6 +99,16 @@ public enum Alliance {
         public  Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return blackPlayer;
         }
+
+        /**
+         * Given a position says whether the passed tile is used for pawn promotion for the black player
+         * @param position the position of the tile we are checking
+         * @return true if it is used for pawn promotion and false otherwise
+         */
+        @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return BoardUtils.RANK_1[position];
+        }
     };   
     
     public abstract int getPawnDirection();
@@ -95,5 +116,6 @@ public enum Alliance {
     public abstract boolean isWhite();
     public abstract boolean isBlack();
     public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
+    public abstract boolean isPawnPromotionSquare(int position);
     
 }
