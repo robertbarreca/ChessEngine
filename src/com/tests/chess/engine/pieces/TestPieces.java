@@ -3,16 +3,24 @@ package com.tests.chess.engine.pieces;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
+import java.util.Set;
+
 import org.junit.Test;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
+import com.chess.engine.board.BoardUtils;
+import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Knight;
 import com.chess.engine.pieces.Pawn;
+import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
+import com.google.common.collect.Sets;
 
 public class TestPieces {
 
@@ -25,7 +33,14 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(2, pawn.calcLegalMoves(board).size());
+
+
+        final Collection<Move> pawnLegalMoves = pawn.calcLegalMoves(board);
+        assertEquals(2, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(Move.MoveFactory
+                .createMove(board, BoardUtils.getCoordFromPos("a2"), BoardUtils.getCoordFromPos("a3"))));
+        assertTrue(pawnLegalMoves.contains(Move.MoveFactory
+                .createMove(board, BoardUtils.getCoordFromPos("a2"), BoardUtils.getCoordFromPos("a4"))));
     }
 
     @Test
@@ -40,19 +55,41 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(4, attackingPawn.calcLegalMoves(board).size());
+        Collection<Move> pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(4, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c3"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("b3"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("d3"))));
 
         // can attack only left piece
         builder.setPiece(new Pawn(Alliance.WHITE, 43));
         board = builder.build();
-
-        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+        pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(3, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c3"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("b3"))));
 
         // can attack only right piece
         builder.setPiece(new Pawn(Alliance.WHITE, 41));
         builder.setPiece(new Pawn(Alliance.BLACK, 43));
         board = builder.build();
-        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+        pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(3, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c3"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("d3"))));
     }
 
     @Test
@@ -67,18 +104,35 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(3, attackingPawn.calcLegalMoves(board).size());
+        Collection<Move> pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(3, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("b4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("d4"))));
 
         // can attack only left piece
         builder.setPiece(new Pawn(Alliance.WHITE, 35));
         board = builder.build();
-        assertEquals(2, attackingPawn.calcLegalMoves(board).size());
+        pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(2, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("b4"))));
 
         // can attack only right piece
         builder.setPiece(new Pawn(Alliance.WHITE, 33));
         builder.setPiece(new Pawn(Alliance.BLACK, 35));
         board = builder.build();
-        assertEquals(2, attackingPawn.calcLegalMoves(board).size());
+        pawnLegalMoves = attackingPawn.calcLegalMoves(board);
+        assertEquals(2, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c3"), BoardUtils.getCoordFromPos("d4"))));
     }
 
     @Test
@@ -93,9 +147,14 @@ public class TestPieces {
         builder.setPiece(blackPawn);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(1, whitePawn.calcLegalMoves(board).size());
-        assertEquals(1, blackPawn.calcLegalMoves(board).size());
-        
+        Collection<Move> whitePawnLegalMoves = whitePawn.calcLegalMoves(board);
+        Collection<Move> blackPawnLegalMoves = blackPawn.calcLegalMoves(board);
+        assertEquals(1, whitePawnLegalMoves.size());
+        assertTrue(whitePawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h3"), BoardUtils.getCoordFromPos("h4"))));
+        assertEquals(1, blackPawnLegalMoves.size());
+        assertTrue(blackPawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a3"), BoardUtils.getCoordFromPos("a2"))));
         
         // white pawn column A and black pawn column H
         whitePawn = new Pawn(Alliance.WHITE, 32);
@@ -104,8 +163,14 @@ public class TestPieces {
         builder.setPiece(blackPawn);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         board = builder.build();
-        assertEquals(1, whitePawn.calcLegalMoves(board).size());
-        assertEquals(1, blackPawn.calcLegalMoves(board).size());
+        whitePawnLegalMoves = whitePawn.calcLegalMoves(board);
+        blackPawnLegalMoves = blackPawn.calcLegalMoves(board);
+        assertEquals(1, whitePawnLegalMoves.size());
+        assertTrue(whitePawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("a5"))));
+        assertEquals(1, blackPawnLegalMoves.size());
+        assertTrue(blackPawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h6"), BoardUtils.getCoordFromPos("h5"))));
     }
 
     @Test
@@ -119,7 +184,10 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(1, startingPawn.calcLegalMoves(board).size());
+        Collection<Move> pawnLegalMoves = startingPawn.calcLegalMoves(board);
+        assertEquals(1, pawnLegalMoves.size());
+        assertTrue(pawnLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c3"))));
         
         // starting position blocking two tiles
         builder.setPiece(new Pawn(Alliance.BLACK, 42));
@@ -143,7 +211,24 @@ public class TestPieces {
         builder.setPiece(knight);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
-        assertEquals(8, knight.calcLegalMoves(board).size());
+        Collection<Move> knightLegalMoves = knight.calcLegalMoves(board);
+        assertEquals(8, knightLegalMoves.size());
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d6"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f6"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c5"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g5"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c3"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g3"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d2"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f2"))));
     }
 
     @Test
@@ -165,10 +250,63 @@ public class TestPieces {
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
 
-        assertEquals(4, knightA.calcLegalMoves(board).size());
-        assertEquals(6, knightB.calcLegalMoves(board).size());
-        assertEquals(6, knightG.calcLegalMoves(board).size());
-        assertEquals(4, knightH.calcLegalMoves(board).size());
+        final Collection<Move> knightALegalMoves = knightA.calcLegalMoves(board);
+        final Collection<Move> knightBLegalMoves = knightB.calcLegalMoves(board);
+        final Collection<Move> knightGLegalMoves = knightG.calcLegalMoves(board);
+        final Collection<Move> knightHLegalMoves = knightH.calcLegalMoves(board);
+
+
+        // test column A exception
+        assertEquals(4, knightALegalMoves.size());
+        assertTrue(knightALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a5"), BoardUtils.getCoordFromPos("b7"))));
+        assertTrue(knightALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a5"), BoardUtils.getCoordFromPos("c6"))));
+        assertTrue(knightALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a5"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(knightALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a5"), BoardUtils.getCoordFromPos("b3"))));
+        
+        // test column B exception
+        assertEquals(6, knightBLegalMoves.size());
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("a7"))));
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("c7"))));
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("d6"))));
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("a3"))));
+        assertTrue(knightBLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("b5"), BoardUtils.getCoordFromPos("c3"))));
+                
+        // test column G exception
+        assertEquals(6, knightGLegalMoves.size());
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("f7"))));
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("h7"))));
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("e6"))));
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("e4"))));
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("f3"))));
+        assertTrue(knightGLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("g5"), BoardUtils.getCoordFromPos("h3"))));
+                
+        // test column H exception
+        assertEquals(4, knightHLegalMoves.size());
+        assertTrue(knightHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h5"), BoardUtils.getCoordFromPos("g7"))));
+        assertTrue(knightHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h5"), BoardUtils.getCoordFromPos("f6"))));
+        assertTrue(knightHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h5"), BoardUtils.getCoordFromPos("f4"))));
+        assertTrue(knightHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h5"), BoardUtils.getCoordFromPos("g3"))));
     }
 
     @Test
@@ -184,7 +322,28 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.BLACK, 19));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
-        assertEquals(7, knight.calcLegalMoves(board).size());
+        final Collection<Move> knightLegalMoves = knight.calcLegalMoves(board);
+        assertEquals(7, knightLegalMoves.size());
+        // check all legal moves
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d6"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c5"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g5"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c3"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g3"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d2"))));
+        assertTrue(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f2"))));
+        
+        
+        // check blocking move not included
+        assertFalse(knightLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f6"))));
     }
 
     @Test
@@ -196,7 +355,35 @@ public class TestPieces {
         builder.setPiece(bishop);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(13, bishop.calcLegalMoves(board).size());
+        final Collection<Move> bishopLegalMoves = bishop.calcLegalMoves(board);
+        assertEquals(13, bishopLegalMoves.size());
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d5"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c6"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b7"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("a8"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f3"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g2"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h1"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b1"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c2"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d3"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f5"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g6"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h7"))));
+        
     }
 
     @Test
@@ -212,7 +399,26 @@ public class TestPieces {
         builder.setPiece(new Pawn(Alliance.BLACK, 22));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(9, bishop.calcLegalMoves(board).size());
+        final Collection<Move> bishopLegalMoves = bishop.calcLegalMoves(board);
+        assertEquals(9, bishopLegalMoves.size());
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d5"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f3"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g2"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h1"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b1"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c2"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d3"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f5"))));
+        assertTrue(bishopLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g6"))));
     }
 
     @Test
@@ -224,7 +430,37 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(14, rook.calcLegalMoves(board).size());
+        final Collection<Move> rookLegalMoves = rook.calcLegalMoves(board);
+        assertEquals(14, rookLegalMoves.size());
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e1"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e2"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e3"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e5"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e6"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e7"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e8"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("a4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h4"))));
+                
     }
 
     @Test
@@ -234,14 +470,37 @@ public class TestPieces {
         builder.setPiece(rook);
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
-        // blocking piece
-        builder.setPiece(new Pawn(Alliance.BLACK, 12));
         // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 12));
+        // blocking piece
         builder.setPiece(new Pawn(Alliance.WHITE, 33));
 
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         Board board = builder.build();
-        assertEquals(11, rook.calcLegalMoves(board).size());
+        final Collection<Move> rookLegalMoves = rook.calcLegalMoves(board);
+        assertEquals(11, rookLegalMoves.size());
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e1"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e2"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e3"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e5"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e6"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e7"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g4"))));
+        assertTrue(rookLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h4"))));
     }
 
     @Test
@@ -252,8 +511,66 @@ public class TestPieces {
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
-        final Board board = builder.build();
-        assertEquals(27, queen.calcLegalMoves(board).size());
+        Board board = builder.build();
+        final Collection<Move> queenLegalMoves = queen.calcLegalMoves(board);
+        assertEquals(27, queenLegalMoves.size());
+        // check up down left right
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e1"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e2"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e3"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e5"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e6"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e7"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e8"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("a4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h4"))));
+        
+        // check diagonals
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d5"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c6"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b7"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("a8"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f3"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g2"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h1"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("b1"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("c2"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d3"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f5"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("g6"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("h7"))));
     }
 
     @Test
@@ -263,13 +580,24 @@ public class TestPieces {
         builder.setPiece(queen);
         builder.setPiece(new King(Alliance.WHITE, 59));
         builder.setPiece(new King(Alliance.BLACK, 3));
-        // blocking piece
-        builder.setPiece(new Pawn(Alliance.BLACK, 12));
+        // blocking pieces
+        builder.setPiece(new Pawn(Alliance.WHITE, 27));
+        builder.setPiece(new Pawn(Alliance.WHITE, 28));
+        builder.setPiece(new Pawn(Alliance.WHITE, 29));
+        builder.setPiece(new Pawn(Alliance.WHITE, 43));
+        builder.setPiece(new Pawn(Alliance.WHITE, 44));
+        builder.setPiece(new Pawn(Alliance.WHITE, 45));
         // attacking piece
-        builder.setPiece(new Pawn(Alliance.WHITE, 33));
+        builder.setPiece(new Pawn(Alliance.BLACK, 35));
+        builder.setPiece(new Pawn(Alliance.BLACK, 37));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
-        assertEquals(24, queen.calcLegalMoves(board).size());
+        final Collection<Move> queenLegalMoves = queen.calcLegalMoves(board);
+        assertEquals(2, queenLegalMoves.size());
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(queenLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
     }
 
     @Test
@@ -280,7 +608,24 @@ public class TestPieces {
         builder.setPiece(whiteKing);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
+        final Collection<Move> kingLegalMoves = whiteKing.calcLegalMoves(board);
         assertEquals(8, whiteKing.calcLegalMoves(board).size());
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d5"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e5"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f5"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d3"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("e3"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f3"))));
     }
 
     @Test
@@ -292,8 +637,33 @@ public class TestPieces {
         builder.setPiece(kingH);
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
-        assertEquals(5, kingA.calcLegalMoves(board).size());
-        assertEquals(5, kingH.calcLegalMoves(board).size());
+        final Collection<Move> kingALegalMoves = kingA.calcLegalMoves(board);
+        final Collection<Move> kingHLegalMoves = kingH.calcLegalMoves(board);
+        // check king A
+        assertEquals(5, kingALegalMoves.size());
+        assertTrue(kingALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("a5"))));
+        assertTrue(kingALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("b5"))));
+        assertTrue(kingALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("b4"))));
+        assertTrue(kingALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("a3"))));
+        assertTrue(kingALegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("a4"), BoardUtils.getCoordFromPos("b3"))));
+
+        // check king H
+        assertEquals(5, kingHLegalMoves.size());
+        assertTrue(kingHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h4"), BoardUtils.getCoordFromPos("g5"))));
+        assertTrue(kingHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h4"), BoardUtils.getCoordFromPos("h5"))));
+        assertTrue(kingHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h4"), BoardUtils.getCoordFromPos("g4"))));
+        assertTrue(kingHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h4"), BoardUtils.getCoordFromPos("g4"))));
+        assertTrue(kingHLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("h4"), BoardUtils.getCoordFromPos("h3"))));
     }
 
     @Test
@@ -302,12 +672,34 @@ public class TestPieces {
         King king = new King(Alliance.WHITE, 36);
         builder.setPiece(new King(Alliance.BLACK, 3));
         builder.setPiece(king);
-        // blocking piece
-        builder.setPiece(new Pawn(Alliance.WHITE, 35));
+        // blocking pieces
+        builder.setPiece(new Pawn(Alliance.WHITE, 27));
+        builder.setPiece(new Pawn(Alliance.WHITE, 28));
+        builder.setPiece(new Pawn(Alliance.WHITE, 29));
+        builder.setPiece(new Pawn(Alliance.WHITE, 43));
+        builder.setPiece(new Pawn(Alliance.WHITE, 44));
+        builder.setPiece(new Pawn(Alliance.WHITE, 45));
         // attacking piece
+        builder.setPiece(new Pawn(Alliance.BLACK, 35));
         builder.setPiece(new Pawn(Alliance.BLACK, 37));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         final Board board = builder.build();
-        assertEquals(7, king.calcLegalMoves(board).size());
+        final Collection<Move> kingLegalMoves = king.calcLegalMoves(board);
+        assertEquals(2, kingLegalMoves.size());
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("d4"))));
+        assertTrue(kingLegalMoves.contains(
+                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e4"), BoardUtils.getCoordFromPos("f4"))));
+    }
+
+    @Test
+    public void testHashCode() {
+        final Board board = Board.createStandardBoard();
+        final Set<Piece> pieceSet = Sets.newHashSet(board.getAllPieces());
+        final Set<Piece> whitePieceSet = Sets.newHashSet(board.getWhitePieces());
+        final Set<Piece> blackPieceSet = Sets.newHashSet(board.getBlackPieces());
+        assertEquals(32, pieceSet.size());
+        assertEquals(16, whitePieceSet.size());
+        assertEquals(16, blackPieceSet.size());
     }
 }

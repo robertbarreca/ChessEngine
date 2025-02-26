@@ -2,35 +2,42 @@ package com.tests.chess.engine.board;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-
 import org.junit.Test;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Board.Builder;
+import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Knight;
 import com.chess.engine.pieces.Pawn;
-import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
+import com.google.common.collect.Iterables;
 
 public class TestBoard {
     
     @Test
     public void testStartingBoard() {
         final Board board = Board.createStandardBoard();
-        final Collection<Piece> whitePieces = board.getWhitePieces();
-        final Collection<Piece> blackPieces = board.getBlackPieces();
-        assertEquals(16, whitePieces.size());
-        assertEquals(16, blackPieces.size());
-        final Collection<Move> whiteLegals = board.calcMoves(whitePieces);
-        final Collection<Move> blackLegals = board.calcMoves(blackPieces);
-        assertEquals(20, whiteLegals.size());
-        assertEquals(20, blackLegals.size());
+        assertEquals(20, board.getCurrPlayer().getLegalMoves().size());
+        assertEquals(20, board.getCurrPlayer().getOpponent().getLegalMoves().size());
+        assertFalse(board.getCurrPlayer().isInCheck());
+        assertFalse(board.getCurrPlayer().isInCheckmate());
+        assertFalse(board.getCurrPlayer().hasCastled());
+        assertEquals(board.getCurrPlayer(), board.getWhitePlayer());
+        assertEquals(board.getCurrPlayer().getOpponent(), board.getBlackPlayer());
+        assertFalse(board.getCurrPlayer().getOpponent().isInCheck());
+        assertFalse(board.getCurrPlayer().getOpponent().isInCheckmate());
+        assertFalse(board.getCurrPlayer().getOpponent().hasCastled());
+
+        final Iterable<Move> allMoves = Iterables.concat(board.getWhitePlayer().getLegalMoves(), board.getWhitePlayer().getLegalMoves());
+        for(final Move move : allMoves) {
+            assertFalse(move.isAttackingMove());
+            assertFalse(move.isCastlingMove());
+        }
     }
 
     @Test
@@ -73,9 +80,33 @@ public class TestBoard {
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         //build the board
         assertThrows(RuntimeException.class, () -> builder.build());
-        
+
         // one king on board
         builder.setPiece(new King(Alliance.WHITE, 60));
         assertThrows(RuntimeException.class, () -> builder.build());
+    }
+    
+    @Test
+    public void testAlgebraicNotation() {
+        assertEquals("a8", BoardUtils.getPosFromCoord(0));
+        assertEquals("b8", BoardUtils.getPosFromCoord(1));
+        assertEquals("c8", BoardUtils.getPosFromCoord(2));
+        assertEquals("d8", BoardUtils.getPosFromCoord(3));
+        assertEquals("e8", BoardUtils.getPosFromCoord(4));
+        assertEquals("f8", BoardUtils.getPosFromCoord(5));
+        assertEquals("g8", BoardUtils.getPosFromCoord(6));
+        assertEquals("h8", BoardUtils.getPosFromCoord(7));
+    }
+
+    @Test
+    public void testGetCoordFromPos() {
+        assertEquals(0, BoardUtils.getCoordFromPos("a8"));
+        assertEquals(1, BoardUtils.getCoordFromPos("b8"));
+        assertEquals(2, BoardUtils.getCoordFromPos("c8"));
+        assertEquals(3, BoardUtils.getCoordFromPos("d8"));
+        assertEquals(4, BoardUtils.getCoordFromPos("e8"));
+        assertEquals(5, BoardUtils.getCoordFromPos("f8"));
+        assertEquals(6, BoardUtils.getCoordFromPos("g8"));
+        assertEquals(7, BoardUtils.getCoordFromPos("h8"));
     }
 }

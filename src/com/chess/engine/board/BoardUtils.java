@@ -93,7 +93,11 @@ public class BoardUtils {
         return Collections.unmodifiableMap(positionToCoordinate);
     }
     
-    public static String getPosFromCoord(final int position) {
-        return ALGEBRAIC_NOTATION[position];
+    public static String getPosFromCoord(final int coord) {
+        return ALGEBRAIC_NOTATION[coord];
+    }
+
+    public static int getCoordFromPos(final String position) {
+        return POS_TO_COORD.get(position);
     }
 }

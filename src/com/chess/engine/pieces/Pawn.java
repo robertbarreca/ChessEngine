@@ -84,7 +84,6 @@ public class Pawn extends Piece{
                     Piece pieceOnTile = board.getTile(destCoord).getPiece();
                     if (this.alliance != pieceOnTile.getAlliance()) {
                         // check for pawn promotion
-                        System.out.println("check for attacking promotion");
                         if (this.alliance.isPawnPromotionSquare(destCoord)) {
                             legalMoves.add(new PawnPromotion(new PawnAttackMove(board, this, destCoord, pieceOnTile)));
                         }

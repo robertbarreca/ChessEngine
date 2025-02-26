@@ -70,6 +70,17 @@ public class Board {
     }
 
     /**
+     * Gets all pieces currently on the board
+     * @return all pieces currently on the board
+     */
+    public Collection<Piece> getAllPieces() {
+        List<Piece> allPieces = new ArrayList<>();
+        allPieces.addAll(this.whitePieces);
+        allPieces.addAll(this.blackPieces);
+        return Collections.unmodifiableList(allPieces);
+    }
+
+    /**
      * gets the white player 
      * @return the white player 
      */
