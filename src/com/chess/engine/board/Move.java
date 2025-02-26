@@ -127,7 +127,7 @@ public abstract class Move {
      */
     @Override
     public String toString() {
-        return ("(" + this.movedPiece.getPosition() + ", " + destCoord + ")");
+        return this.movedPiece.getPieceType().toString() + BoardUtils.getPosFromCoord(this.destCoord);
     }
 
     /**
@@ -166,6 +166,15 @@ public abstract class Move {
             super(null, -1);
         }
 
+        /**
+         * get's the starting coordinate for a null move
+         * @return -1 since there is no starting position
+         */
+        @Override
+        public int getStartingCoord() {
+            return -1;
+        }
+
         @Override
         public Board execute() {
             throw new RuntimeException("Cannot execute a null move!");
@@ -196,16 +205,6 @@ public abstract class Move {
         public boolean equals(Object other) {
             return this == other || (other instanceof PassiveMove && super.equals(other));
         }
-
-        // TODO: write function to convert from coord to position
-        /**
-         * Converts the passive move to it's string representation
-         * @return the string representation of a passive move
-         */
-        // @Override
-        // public String toString() {
-        //     return movedPiece.getPieceType().toString() + BoardUtils.getPosAtCoord(this.destCoord);
-        // }
     }
 
     /**
@@ -243,6 +242,15 @@ public abstract class Move {
         }
 
         /**
+         * Converts the attack move to it's string representation
+         * @return the string representation of the attack move
+         */
+        @Override
+        public String toString() {
+            return this.movedPiece.getPieceType().toString() + "X" + BoardUtils.getPosFromCoord(destCoord);
+        }
+
+        /**
          * Computes the hash of a piece
          * @return the hascode of a piece
          */
@@ -276,38 +284,64 @@ public abstract class Move {
          */
         @Override
         public Board execute() {
-            return null;
+            final Board.Builder builder = new Board.Builder();
+            // set curr player's pieces except for moved piece
+            for (final Piece piece : this.board.getCurrPlayer().getActivePieces()) {
+                if (!piece.equals(this.movedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set opponents pieces
+            for (final Piece piece : this.board.getCurrPlayer().getOpponent().getActivePieces()) {
+                if (!piece.equals(this.capturedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set movedPiece
+            builder.setPiece(this.movedPiece.movePiece(this));
+            // switch active player
+            builder.setCurrPlayerAlliance(this.board.getCurrPlayer().getOpponent().getAlliance());
+            return builder.build();
         }
     }
 
     /**
      * This class represents a pawn move on a chessboard
      */
-    public static final class PawnMove extends Move {
-        /**
-         * Constructor for a pawn move
-         * @param board the board the move is being played on
-         * @param movedPiece the pawn being moved
-         * @param destCoord the destination of the pawn
-         */
-        public PawnMove(final Board board, final Piece movedPiece, final int destCoord) {
-            super(board, movedPiece, destCoord);
-        }
+    public static class PawnMove extends Move {
+            /**
+             * Constructor for a pawn move
+             * @param board the board the move is being played on
+             * @param movedPiece the pawn being moved
+             * @param destCoord the destination of the pawn
+             */
+            public PawnMove(final Board board, final Piece movedPiece, final int destCoord) {
+                super(board, movedPiece, destCoord);
+            }
+    
+            /**
+             * Get's the string representation of a pawn move
+             * @return the string representation of a pawn move
+             */
+            @Override
+            public String toString() {
+                return BoardUtils.getPosFromCoord(this.destCoord);
+            }
 
-        /**
-         * Get's the string representation of a pawn move
-         * @return the string representation of a pawn move
-         */
-        @Override
-        public String toString() {
-            return BoardUtils.getPosFromCoord(this.destCoord);
+            /**
+             * Checks if the passed object is equal to this pawn move
+             * @return true if they are equivlant and false otherwise
+             */
+            @Override
+            public boolean equals(final Object other){
+                return this == other || (other instanceof PawnMove && super.equals(other));
+            }
         }
-    }
-
-    /**
-     * This class represents a pawn jump move on a chessboard
-     */
-    public static final class PawnJumpMove extends Move {
+    
+        /**
+         * This class represents a pawn jump move on a chessboard
+         */
+        public static final class PawnJumpMove extends PawnMove {
         /**
          * Constructor for a move
          * @param board the board the move is being played on
@@ -361,26 +395,71 @@ public abstract class Move {
                 final Piece capturedPiece) {
             super(board, movedPiece, destCoord, capturedPiece);
         }
+
+        /**
+         * Converts the attack move to it's string representation
+         * @return the string representation of the attack move
+         */
+        @Override
+        public String toString() {
+            return BoardUtils.getPosFromCoord(this.movedPiece.getPosition()).substring(0, 1) + "X"
+                    + BoardUtils.getPosFromCoord(destCoord);
+        }
+        
+
+        /**
+         * Checks if the passed object to this pawn attack move
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(final Object other){
+            return this == other || (other instanceof PawnAttackMove && super.equals(other));
+        }
     }
 
-    // TODO: EN PASSANT MOVES
-    // /**
-    //  * This class represents an en Passant move on a chessboard
-    //  */
-    // public static class PawnEnPassantAttackMove extends PawnAttackMove {
-    //     /**
-    //      * Constructor for an en Passant move
-    //      * @param board the board the move is being played on
-    //      * @param movedPiece the pawn being moved
-    //      * @param destCoord the destination of the pawn
-    //      * @param capturedPiece the piece the pawn is attacking
-    //      */
-    //     public PawnEnPassantAttackMove(final Board board, final Piece movedPiece, final int destCoord,
-    //             final Piece capturedPiece) {
-    //         super(board, movedPiece, destCoord, capturedPiece);
-    //     }
-    // }
-    // TODO: CASTLE MOVES
+    /**
+     * This class represents an en Passant move on a chessboard
+     */
+    public static class PawnEnPassantAttackMove extends PawnAttackMove {
+        /**
+         * Constructor for an en Passant move
+         * @param board the board the move is being played on
+         * @param movedPiece the pawn being moved
+         * @param destCoord the destination of the pawn
+         * @param capturedPiece the piece the pawn is attacking
+         */
+        public PawnEnPassantAttackMove(final Board board, final Piece movedPiece, final int destCoord,
+                final Piece capturedPiece) {
+            super(board, movedPiece, destCoord, capturedPiece);
+        }
+
+        @Override
+        public boolean equals(final Object other) {
+            return this == other || (other instanceof PawnEnPassantAttackMove && super.equals(other));
+        }
+
+        @Override
+        public Board execute() {
+            final Board.Builder builder = new Board.Builder();
+            // set curr player's pieces except for moved piece
+            for (final Piece piece : this.board.getCurrPlayer().getActivePieces()) {
+                if (!piece.equals(this.movedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set opponents pieces
+            for (final Piece piece : this.board.getCurrPlayer().getOpponent().getActivePieces()) {
+                if (!piece.equals(this.capturedPiece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            // set movedPiece
+            builder.setPiece(this.movedPiece.movePiece(this));
+            // switch active player
+            builder.setCurrPlayerAlliance(this.board.getCurrPlayer().getOpponent().getAlliance());
+            return builder.build();
+        }
+    }
     /**
      * This class represents a castle move on a chessboard
      */
@@ -444,10 +523,38 @@ public abstract class Move {
             // set king and rook
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setPiece(
-                new Rook(this.castleRook.getAlliance(), this.castleRookDestCoord));
+                    new Rook(this.castleRook.getAlliance(), this.castleRookDestCoord));
             // switch active player
             builder.setCurrPlayerAlliance(this.board.getCurrPlayer().getOpponent().getAlliance());
             return builder.build();
+        }
+        
+        /**
+         * Makes the hashcode for the castle move
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int res = super.hashCode();
+            res = prime * res + this.castleRook.hashCode();
+            res = prime * res + this.castleRookDestCoord;
+            return res;
+        }
+        
+        /**
+         * Says whether this castle move is equal to the passed object
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof CastleMove)) {
+                return false;
+            }
+            final CastleMove otherCastleMove = (CastleMove) other;
+            return super.equals(otherCastleMove) && this.castleRook.equals(otherCastleMove.getCastleRook());
         }
     }
 
@@ -477,6 +584,16 @@ public abstract class Move {
         public String toString() {
             return "O-O";
         }
+
+        /**
+         * Checks whether to passed object is equivlant to the current king side castle move
+         * @param other the object we are comparing to
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(Object other) {
+            return this == other || (other instanceof KingSideCastleMove && super.equals(other));
+        }
     }
 
     /**
@@ -504,6 +621,16 @@ public abstract class Move {
         @Override
         public String toString() {
             return "O-O-O";
+        }
+
+        /**
+         * Checks whether to passed object is equivlant to the current queen side castle move
+         * @param other the object we are comparing to
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(Object other) {
+            return this == other || (other instanceof QueenSideCastleMove && super.equals(other));
         }
     }
 

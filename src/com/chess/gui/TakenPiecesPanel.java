@@ -89,11 +89,10 @@ public class TakenPiecesPanel extends JPanel{
         // place captured white pieces
         for (final Piece capturedPiece : whiteTakenPieces) {
             try {
-                final BufferedImage image = ImageIO
-                        .read(new File("art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1)
-                                + capturedPiece.toString()));
+                String piecePath = "art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1) + capturedPiece.toString() + ".gif";
+                final BufferedImage image = ImageIO.read(new File(piecePath));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(icon);
                 this.southPanel.add(imageLabel);
 
             } catch (final IOException e) {
@@ -104,11 +103,10 @@ public class TakenPiecesPanel extends JPanel{
         // place captured black pieces
         for (final Piece capturedPiece : blackTakenPieces) {
             try {
-                final BufferedImage image = ImageIO
-                        .read(new File("art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1)
-                                + capturedPiece.toString()));
+                String piecePath = "art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1) + capturedPiece.toString() + ".gif";
+                final BufferedImage image = ImageIO.read(new File(piecePath));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(icon);
                 this.northPanel.add(imageLabel);
 
             } catch (final IOException e) {

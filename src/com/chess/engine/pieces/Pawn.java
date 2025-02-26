@@ -9,9 +9,9 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.PassiveMove;
 import com.chess.engine.board.Move.PawnAttackMove;
 import com.chess.engine.board.Move.PawnJumpMove;
+import com.chess.engine.board.Move.PawnMove;
 
 /**
  * This class represents a single pawn on a chessboard
@@ -54,7 +54,7 @@ public class Pawn extends Piece{
             // regular pawn move if tile is unocuppied
             if (offset == 8 && !board.getTile(destCoord).isOccupied()) {
                 legalMoves.add
-                (new PassiveMove(board, this, destCoord));
+                (new PawnMove(board, this, destCoord));
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&

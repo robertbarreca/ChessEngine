@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import com.chess.engine.board.Board;
@@ -28,7 +27,7 @@ public class GameHistoryPanel extends JPanel{
         this.setLayout(new BorderLayout());
         this.model = new DataModel();
         final JTable table = new JTable(this.model);
-        table.setRowHeight(15);
+        table.setRowHeight(25);
         this.scrollPane = new JScrollPane(table);
         this.scrollPane.setColumnHeaderView(table.getTableHeader());
         this.scrollPane.setPreferredSize(HISTORY_PANEL_DIMENSION);
