@@ -33,4 +33,12 @@ public class MoveTransition {
     public Board getUpdatedBoard() {
         return this.updatedBoard;
     }
+
+    /**
+     * Get's the move transition's move
+     * @return the move transition's move
+     */
+    public Move getTransitionMove() {
+        return this.move;
+    }
 }

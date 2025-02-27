@@ -22,8 +22,9 @@ public class King extends Piece {
 
     /**
      * Constructor that sets the position and the alliance of the king based on the passed params. It also sets the hasMoved field to false
-     * @param position the position the king is in 
      * @param alliance the team that the king is aligned with
+     * @param position the position the king is in 
+     * 
      */
     public King(final Alliance alliance, final int position) {
         super(PieceType.KING, alliance, position, false);
@@ -34,6 +35,8 @@ public class King extends Piece {
      * Constructor that sets the position, alliance, and has moved fields of the king based on the passed params.
      * @param position the position the king is in 
      * @param alliance the team that the king is aligned with
+     * @param hasMoved says whether the king has moved or not
+     * @param hasCastled says whether the king has castled or not
      */
     public King(final Alliance alliance, final int position, final boolean hasMoved, final boolean hasCastled) {
         super(PieceType.KING, alliance, position, hasMoved);
@@ -87,6 +90,10 @@ public class King extends Piece {
         return PieceType.KING.toString();
     }
 
+    /**
+     * Says whether the king has castled or not
+     * @return true if the king has castled and false otherwise
+     */
     public boolean hasCastled() {
         return this.hasCastled;
     }
@@ -124,7 +131,7 @@ public class King extends Piece {
      */
     @Override
     public King movePiece(Move move) {
-        return new King(move.getMovedPiece().getAlliance(), move.getDestCoord(), true, move.isCastlingMove());
+        return new King(move.getMovedPiece().getAlliance(), move.getDestCoord(), true, move.isCastlingMove() || this.hasCastled);
     }
     
 }
