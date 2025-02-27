@@ -420,7 +420,7 @@ public abstract class Move {
              */
             @Override
             public String toString() {
-                return "";
+                return BoardUtils.getPosFromCoord(this.decoratedMove.getStartingCoord()).substring(0, 2) + "=" + this.promotedPawn.getPromotionPiece().getPieceType().toString(); 
             }
 
              

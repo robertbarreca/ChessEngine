@@ -360,7 +360,7 @@ public class Table {
                             final MoveTransition transition = chessBoard.getCurrPlayer().makeMove(move);
                             // if legal move make new chessboard based on move
                             if (transition.getMoveStatus().isDone()) {
-                                chessBoard = transition.getTransitionBoard();
+                                chessBoard = transition.getUpdatedBoard();
                                 moveLog.addMove(move);
                             }
                             // clear selections

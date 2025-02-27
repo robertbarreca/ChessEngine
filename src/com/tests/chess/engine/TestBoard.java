@@ -1,4 +1,4 @@
-package com.tests.chess.engine.board;
+package com.tests.chess.engine;
 
 import static org.junit.Assert.*;
 

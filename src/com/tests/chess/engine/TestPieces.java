@@ -1,4 +1,4 @@
-package com.tests.chess.engine.pieces;
+package com.tests.chess.engine;
 
 
 import static org.junit.Assert.*;
@@ -20,6 +20,8 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
+import com.chess.engine.player.MoveStatus;
+import com.chess.engine.player.MoveTransition;
 import com.google.common.collect.Sets;
 
 public class TestPieces {
@@ -175,33 +177,119 @@ public class TestPieces {
 
     @Test
     public void testPawnPieceBlocking() {
-        // starting position blocking one tile
-        final Board.Builder builder = new Board.Builder();
-        Pawn startingPawn = new Pawn(Alliance.WHITE, 50);
-        builder.setPiece(startingPawn);
-        builder.setPiece(new Pawn(Alliance.WHITE, 34));
-        builder.setPiece(new King(Alliance.WHITE, 59));
-        builder.setPiece(new King(Alliance.BLACK, 3));
-        builder.setCurrPlayerAlliance(Alliance.WHITE);
-        Board board = builder.build();
-        Collection<Move> pawnLegalMoves = startingPawn.calcLegalMoves(board);
-        assertEquals(1, pawnLegalMoves.size());
-        assertTrue(pawnLegalMoves.contains(
-                MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"), BoardUtils.getCoordFromPos("c3"))));
-        
-        // starting position blocking two tiles
-        builder.setPiece(new Pawn(Alliance.BLACK, 42));
-        board = builder.build();
-        assertEquals(0, startingPawn.calcLegalMoves(board).size());
+            // starting position blocking one tile
+            final Board.Builder builder = new Board.Builder();
+            Pawn startingPawn = new Pawn(Alliance.WHITE, 50);
+            builder.setPiece(startingPawn);
+            builder.setPiece(new Pawn(Alliance.WHITE, 34));
+            builder.setPiece(new King(Alliance.WHITE, 59));
+            builder.setPiece(new King(Alliance.BLACK, 3));
+            builder.setCurrPlayerAlliance(Alliance.WHITE);
+            Board board = builder.build();
+            Collection<Move> pawnLegalMoves = startingPawn.calcLegalMoves(board);
+            assertEquals(1, pawnLegalMoves.size());
+            assertTrue(pawnLegalMoves.contains(
+                            MoveFactory.createMove(board, BoardUtils.getCoordFromPos("c2"),
+                                            BoardUtils.getCoordFromPos("c3"))));
 
-        // non-starting position blocking one tile
-        Pawn movedPawn = new Pawn(Alliance.BLACK, 22);
-        builder.setPiece(movedPawn);
-        builder.setPiece(new Pawn(Alliance.WHITE, 30));
-        board = builder.build();
-        assertEquals(0, movedPawn.calcLegalMoves(board).size());
+            // starting position blocking two tiles
+            builder.setPiece(new Pawn(Alliance.BLACK, 42));
+            board = builder.build();
+            assertEquals(0, startingPawn.calcLegalMoves(board).size());
+
+            // non-starting position blocking one tile
+            Pawn movedPawn = new Pawn(Alliance.BLACK, 22);
+            builder.setPiece(movedPawn);
+            builder.setPiece(new Pawn(Alliance.WHITE, 30));
+            board = builder.build();
+            assertEquals(0, movedPawn.calcLegalMoves(board).size());
+    }
+    
+    @Test
+    public void testWhiteEnPassant() {
+        final Board.Builder builder = new Board.Builder();
+        // Black Layout
+        builder.setPiece(new King(Alliance.BLACK, 4));
+        builder.setPiece(new Pawn(Alliance.BLACK, 11));
+        // White Layout
+        builder.setPiece(new Pawn(Alliance.WHITE, 28));
+        builder.setPiece(new King(Alliance.WHITE, 60));
+        // Set the current player
+        builder.setCurrPlayerAlliance(Alliance.BLACK);
+        final Board board = builder.build();
+        // pawn jump
+        final Move m1 = MoveFactory.createMove(board, BoardUtils.getCoordFromPos("d7"),
+                        BoardUtils.getCoordFromPos("d5"));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(m1);
+        assertTrue(t1.getMoveStatus().isDone());
+        // en passant capture
+        final Move m2 = Move.MoveFactory.createMove(t1.getUpdatedBoard(), BoardUtils.getCoordFromPos("e5"),
+                        BoardUtils.getCoordFromPos("d6"));
+        final MoveTransition t2 = t1.getUpdatedBoard().getCurrPlayer().makeMove(m2);
+        assertTrue(t2.getMoveStatus().isDone());
+    }
+    
+    @Test
+    public void testBlackEnPassant() {
+        final Board.Builder builder = new Board.Builder();
+        // Black Layout
+        builder.setPiece(new King(Alliance.BLACK, 4));
+        builder.setPiece(new Pawn(Alliance.BLACK, 35));
+        // White Layout
+        builder.setPiece(new Pawn(Alliance.WHITE, 52));
+        builder.setPiece(new King(Alliance.WHITE, 60));
+        // Set the current player
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
+        final Board board = builder.build();
+        // pawn jump
+        final Move m1 = MoveFactory.createMove(board, BoardUtils.getCoordFromPos("e2"),
+                        BoardUtils.getCoordFromPos("e4"));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(m1);
+        assertTrue(t1.getMoveStatus().isDone());
+        // en passant capture
+        final Move m2 = Move.MoveFactory.createMove(t1.getUpdatedBoard(), BoardUtils.getCoordFromPos("d4"), BoardUtils.getCoordFromPos("e3"));
+        final MoveTransition t2 = t1.getUpdatedBoard().getCurrPlayer().makeMove(m2);
+        assertTrue(t2.getMoveStatus().isDone());
     }
 
+    @Test
+    public void testWhitePawnPromotion() {
+        final Board.Builder builder = new Board.Builder();
+        // Black Layout
+        builder.setPiece(new King(Alliance.BLACK, 22));
+        // White Layout
+        builder.setPiece(new Pawn(Alliance.WHITE, 15));
+        builder.setPiece(new King(Alliance.WHITE, 52));
+        // Set the current player
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
+        final Board board = builder.build();
+        final Move m1 = Move.MoveFactory.createMove(board, BoardUtils.getCoordFromPos(
+                        "h7"), BoardUtils.getCoordFromPos("h8"));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(m1);
+        assertTrue(t1.getMoveStatus().isDone());
+        // check pawn is now a queen
+        assertTrue(t1.getUpdatedBoard().getWhitePieces().contains(new Queen(Alliance.WHITE, 7)));
+    }
+    
+    @Test
+    public void testBlackPawnPromotion() {
+            final Board.Builder builder = new Board.Builder();
+            // Black Layout
+            builder.setPiece(new King(Alliance.BLACK, 22));
+            builder.setPiece(new Pawn(Alliance.BLACK, 48));
+            // White Layout
+            builder.setPiece(new King(Alliance.WHITE, 52));
+            // Set the current player
+            builder.setCurrPlayerAlliance(Alliance.BLACK);
+            final Board board = builder.build();
+            final Move m1 = Move.MoveFactory.createMove(board, BoardUtils.getCoordFromPos(
+                            "a2"), BoardUtils.getCoordFromPos("a1"));
+            final MoveTransition t1 = board.getCurrPlayer().makeMove(m1);
+            assertTrue(t1.getMoveStatus().isDone());
+            // check pawn is now a queen
+            assertTrue(t1.getUpdatedBoard().getBlackPieces().contains(new Queen(Alliance.BLACK, 56)));
+    }
+    
     @Test
     public void testMiddleKnightEmptyBoard() {
         final Board.Builder builder = new Board.Builder();
@@ -693,6 +781,44 @@ public class TestPieces {
     }
 
     @Test
+    public void testMoveIntoCheck() {
+        final Board.Builder builder = new Board.Builder();
+        // White setup
+        builder.setPiece(new King(Alliance.WHITE, 59));
+        builder.setPiece(new Rook(Alliance.WHITE, 35));
+        // black setup
+        builder.setPiece(new King(Alliance.BLACK, 0));
+        builder.setPiece(new Queen(Alliance.BLACK, 11));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
+        final Board board = builder.build();
+
+        final Move invalidMove = MoveFactory.createMove(board, BoardUtils.getCoordFromPos("d4"),
+                        BoardUtils.getCoordFromPos("a4"));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(invalidMove);
+        assertEquals(MoveStatus.LEAVES_PLAYER_IN_CHECK, t1.getMoveStatus());
+        assertFalse(t1.getMoveStatus().isDone());
+    }
+
+    @Test
+    public void testNotMovingOutOfCheck() {
+        final Board.Builder builder = new Board.Builder();
+        // White setup
+        builder.setPiece(new King(Alliance.WHITE, 35));
+        builder.setPiece(new Rook(Alliance.WHITE, 59));
+        // black setup
+        builder.setPiece(new King(Alliance.BLACK, 0));
+        builder.setPiece(new Queen(Alliance.BLACK, 11));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
+        final Board board = builder.build();
+
+        final Move invalidMove = MoveFactory.createMove(board, BoardUtils.getCoordFromPos("d1"),
+                        BoardUtils.getCoordFromPos("a1"));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(invalidMove);
+        assertEquals(MoveStatus.LEAVES_PLAYER_IN_CHECK, t1.getMoveStatus());
+        assertFalse(t1.getMoveStatus().isDone());
+    }
+    
+    @Test
     public void testHashCode() {
         final Board board = Board.createStandardBoard();
         final Set<Piece> pieceSet = Sets.newHashSet(board.getAllPieces());
@@ -703,3 +829,13 @@ public class TestPieces {
         assertEquals(16, blackPieceSet.size());
     }
 }
+
+
+// TODO
+/*
+ * write test cases for castling
+ * test simple check mates
+ * test simple stalemates
+ *      
+ * 
+ */

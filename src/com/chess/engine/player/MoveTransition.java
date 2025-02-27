@@ -8,12 +8,12 @@ import com.chess.engine.board.Move;
  */
 public class MoveTransition {
 
-    private final Board transitionBoard;
+    private final Board updatedBoard;
     private final Move move;
     private final MoveStatus moveStatus;
 
-    MoveTransition(final Board transitionBoard, final Move move, final MoveStatus moveStatus) {
-        this.transitionBoard = transitionBoard;
+    MoveTransition(final Board updatedBoard, final Move move, final MoveStatus moveStatus) {
+        this.updatedBoard = updatedBoard;
         this.move = move;
         this.moveStatus = moveStatus;
     }
@@ -30,7 +30,7 @@ public class MoveTransition {
      * Gets the board based on the move made
      * @return the transition board
      */
-    public Board getTransitionBoard() {
-        return this.transitionBoard;
+    public Board getUpdatedBoard() {
+        return this.updatedBoard;
     }
 }
