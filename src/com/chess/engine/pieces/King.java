@@ -16,7 +16,8 @@ import com.chess.engine.board.Tile;
 /**
  * This class represents a single king on the chessboard
  */
-public class King extends Piece{
+public class King extends Piece {
+    private final boolean hasCastled;
     private static final int[] CANDIDATE_MOVE_OFFSETS = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
     /**
@@ -26,6 +27,7 @@ public class King extends Piece{
      */
     public King(final Alliance alliance, final int position) {
         super(PieceType.KING, alliance, position, false);
+        this.hasCastled = false;
     }
 
     /**
@@ -33,8 +35,9 @@ public class King extends Piece{
      * @param position the position the king is in 
      * @param alliance the team that the king is aligned with
      */
-    public King(final Alliance alliance, final int position, final boolean hasMoved) {
+    public King(final Alliance alliance, final int position, final boolean hasMoved, final boolean hasCastled) {
         super(PieceType.KING, alliance, position, hasMoved);
+        this.hasCastled = hasCastled;
     }
 
     /**
@@ -83,6 +86,10 @@ public class King extends Piece{
     public String toString() {
         return PieceType.KING.toString();
     }
+
+    public boolean hasCastled() {
+        return this.hasCastled;
+    }
     
     /**
      * Checks if the king is on column A and if the given move offset 
@@ -117,7 +124,7 @@ public class King extends Piece{
      */
     @Override
     public King movePiece(Move move) {
-        return new King(move.getMovedPiece().getAlliance(), move.getDestCoord());
+        return new King(move.getMovedPiece().getAlliance(), move.getDestCoord(), true, move.isCastlingMove());
     }
     
 }

@@ -23,19 +23,15 @@ public abstract class Player {
     /**
      * Constructor that creates a player
      * @param board the board being used to play the game
-     * @param legalMoves the possible moves this player can make
+     * @param playerLegals the possible moves this player can make
      * @param opponentMoves the possible moves the other player can make
      */
-    Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
+    Player(final Board board, final Collection<Move> playerLegals, final Collection<Move> opponentMoves) {
         this.board = board;
         this.king = establishKing();
         this.isInCheck = !Player.calculateAttacksOnTile(this.king.getPosition(), opponentMoves).isEmpty();
-        this.legalMoves = new ArrayList<>(legalMoves);
-        this.legalMoves.addAll(calcCastleMoves(this.legalMoves, opponentMoves));
-        Collections.unmodifiableCollection(this.legalMoves);
-
-        // check if any move is attacking the king's position
-        
+        playerLegals.addAll(calcCastleMoves(playerLegals, opponentMoves));
+        this.legalMoves = Collections.unmodifiableCollection(playerLegals);        
     }
 
     /**
@@ -138,7 +134,7 @@ public abstract class Player {
      * @return true if the current player has castled and false otherwise
      */
     public boolean hasCastled() {
-        return false;
+        return this.king.hasCastled();
     }
 
     public MoveTransition makeMove(final Move move) {

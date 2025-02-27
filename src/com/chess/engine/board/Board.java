@@ -122,7 +122,7 @@ public class Board {
         for (final Piece p: pieces){
             legalMoves.addAll(p.calcLegalMoves(this));
         }
-        return Collections.unmodifiableList(legalMoves);
+        return legalMoves;
     }
         
     /**
