@@ -226,12 +226,9 @@ public class Board {
         final Board.Builder builder = new Board.Builder();
         // white setup
         builder.setPiece(new King(Alliance.WHITE, 60));
-        builder.setPiece(new Rook(Alliance.WHITE, 63));
-        builder.setPiece(new Rook(Alliance.WHITE, 56));
         // black setup
         builder.setPiece(new King(Alliance.BLACK, 4));
-        builder.setPiece(new Rook(Alliance.BLACK, 0));
-        builder.setPiece(new Rook(Alliance.BLACK, 7));
+        builder.setPiece(new Queen(Alliance.BLACK, 12));
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         return builder.build();
     }

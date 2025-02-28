@@ -6,6 +6,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.*;
+import com.chess.engine.board.MoveUtils;
 import com.chess.engine.board.Tile;
 
 /**
@@ -40,11 +41,11 @@ public class Bishop extends Piece{
     @Override
     public Collection<Move> calcLegalMoves(final Board board) {
         final List<Move> legalMoves = new ArrayList<>();
-        for (final int offset: CANDIDATE_MOVE_OFFSETS){
+        for (final int offset : CANDIDATE_MOVE_OFFSETS) {
             int destCoord = this.position;
             // check edge cases
             while (BoardUtils.isValidTileCoord(destCoord)) {
-                if(isColumnAExclusion(destCoord, offset) || isColumnHExclusion(destCoord, offset)) {
+                if (isColumnAExclusion(destCoord, offset) || isColumnHExclusion(destCoord, offset)) {
                     break;
                 }
                 destCoord += offset;
@@ -70,6 +71,15 @@ public class Bishop extends Piece{
                 }
             }
         }
+        
+        // filter out moves that put king in check
+        if (board.getWhitePlayer() != null && this.alliance.isWhite()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getWhitePlayer());
+        }
+        else if (board.getBlackPlayer() != null && this.alliance.isBlack()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getBlackPlayer());
+        }
+
         return Collections.unmodifiableList(legalMoves);
     }
     

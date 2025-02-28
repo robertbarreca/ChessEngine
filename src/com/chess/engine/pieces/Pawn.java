@@ -14,6 +14,7 @@ import com.chess.engine.board.Move.PawnEnPassantAttackMove;
 import com.chess.engine.board.Move.PawnJumpMove;
 import com.chess.engine.board.Move.PawnMove;
 import com.chess.engine.board.Move.PawnPromotion;
+import com.chess.engine.board.MoveUtils;
 
 /**
  * This class represents a single pawn on a chessboard
@@ -58,15 +59,14 @@ public class Pawn extends Piece{
                 // check for pawn promotion
                 if (this.alliance.isPawnPromotionSquare(destCoord)) {
                     legalMoves.add(new PawnPromotion(new PawnMove(board, this, destCoord)));
-                }
-                else {
+                } else {
                     legalMoves.add(new PawnMove(board, this, destCoord));
                 }
             }
             // pawn jump iff pawn hasn't moved
             else if (offset == 16 && !this.hasMoved &&
                     ((BoardUtils.RANK_7[this.position] && this.alliance.isBlack()) ||
-                    (BoardUtils.RANK_2[this.position] && this.alliance.isWhite()))) {
+                            (BoardUtils.RANK_2[this.position] && this.alliance.isWhite()))) {
                 final int behindDestCoord = this.position + (8 * this.alliance.getPawnDirection());
                 // two tiles in front aren't occupied
                 if (!board.getTile(behindDestCoord).isOccupied() &&
@@ -86,14 +86,13 @@ public class Pawn extends Piece{
                         // check for pawn promotion
                         if (this.alliance.isPawnPromotionSquare(destCoord)) {
                             legalMoves.add(new PawnPromotion(new PawnAttackMove(board, this, destCoord, pieceOnTile)));
-                        }
-                        else {
+                        } else {
                             legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
                         }
                     }
                 }
                 // check for en passant play
-                else if(board.getEnPassantPawn() != null){
+                else if (board.getEnPassantPawn() != null) {
                     if (board.getEnPassantPawn()
                             .getPosition() == (this.position + this.getAlliance().getOppositePawnDirection())) {
                         final Piece pieceOnTile = board.getEnPassantPawn();
@@ -115,14 +114,13 @@ public class Pawn extends Piece{
                         // check for pawn promotion
                         if (this.alliance.isPawnPromotionSquare(destCoord)) {
                             legalMoves.add(new PawnPromotion(new PawnAttackMove(board, this, destCoord, pieceOnTile)));
-                        }
-                        else {
-                            legalMoves.add(new PawnAttackMove(board, this, destCoord,  pieceOnTile));
+                        } else {
+                            legalMoves.add(new PawnAttackMove(board, this, destCoord, pieceOnTile));
                         }
                     }
                 }
                 // check for en passant play
-                else if(board.getEnPassantPawn() != null){
+                else if (board.getEnPassantPawn() != null) {
                     if (board.getEnPassantPawn()
                             .getPosition() == (this.position + this.getAlliance().getPawnDirection())) {
                         final Piece pieceOnTile = board.getEnPassantPawn();
@@ -133,6 +131,15 @@ public class Pawn extends Piece{
                 }
             }
         }
+        
+        // filter out moves that put king in check
+        if (board.getWhitePlayer() != null && this.alliance.isWhite()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getWhitePlayer());
+        }
+        else if (board.getBlackPlayer() != null && this.alliance.isBlack()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getBlackPlayer());
+        }
+        
         return Collections.unmodifiableList(legalMoves);
     }
     

@@ -11,6 +11,7 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
+import com.chess.engine.board.MoveUtils;
 import com.chess.engine.board.Tile;
 
 /**
@@ -77,6 +78,15 @@ public class Rook extends Piece{
                 }
             }
         }
+
+        // filter out moves that put king in check
+        if (board.getWhitePlayer() != null && this.alliance.isWhite()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getWhitePlayer());
+        }
+        else if (board.getBlackPlayer() != null && this.alliance.isBlack()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getBlackPlayer());
+        }
+        
         return Collections.unmodifiableList(legalMoves);
     }
     

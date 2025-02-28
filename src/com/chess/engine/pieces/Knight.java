@@ -71,8 +71,16 @@ public class Knight extends Piece {
                     }
                 }
             }
-
         }
+
+        // filter out moves that put king in check
+        if (board.getWhitePlayer() != null && this.alliance.isWhite()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getWhitePlayer());
+        }
+        else if (board.getBlackPlayer() != null && this.alliance.isBlack()) {
+            return MoveUtils.pruneIllegalMoves(legalMoves, board.getBlackPlayer());
+        }
+        
         return Collections.unmodifiableList(legalMoves);
     }
 
