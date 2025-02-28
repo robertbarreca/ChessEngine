@@ -11,6 +11,7 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.PassiveMove;
+import com.chess.engine.player.Player;
 import com.chess.engine.board.Tile;
 
 /**
@@ -52,9 +53,10 @@ public class King extends Piece {
     public Collection<Move> calcLegalMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final int offset : CANDIDATE_MOVE_OFFSETS) {
-            
+
             // edge cases
-            if (!BoardUtils.isValidTileCoord(this.position) || isColumnAExclusion(this.position, offset) || isColumnHExclusion(this.position, offset)) {
+            if (!BoardUtils.isValidTileCoord(this.position) || isColumnAExclusion(this.position, offset)
+                    || isColumnHExclusion(this.position, offset)) {
                 continue;
             }
             final int destCoord = this.position + offset;
@@ -76,7 +78,17 @@ public class King extends Piece {
                     }
                 }
             }
-
+        }
+        // add castle moves
+        if (board.getWhitePlayer() != null && this.alliance.isWhite()) {
+            Player whitePlayer = board.getWhitePlayer();
+            legalMoves.addAll(whitePlayer.calcCastleMoves(whitePlayer.getLegalMoves(),
+                    whitePlayer.getOpponent().getLegalMoves()));
+        }
+        else if (board.getBlackPlayer() != null && this.alliance.isBlack()) {
+            Player blackPlayer = board.getBlackPlayer();
+            legalMoves.addAll(blackPlayer.calcCastleMoves(blackPlayer.getLegalMoves(),
+                    blackPlayer.getOpponent().getLegalMoves()));
         }
         return Collections.unmodifiableList(legalMoves);
     }

@@ -60,10 +60,10 @@ public class WhitePlayer extends Player{
      * @return all the castle moves the white player can make
      */
     @Override
-    protected Collection<Move> calcCastleMoves(final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
+    public Collection<Move> calcCastleMoves(final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
         final List<Move> castleMoves = new ArrayList<>();
-        // king hasn't moved nor is in check
-        if (!this.king.hasMoved() && !this.isInCheck()) {
+        // king hasn't moved nor is in check nor has castled
+        if (!this.hasCastled() && !this.king.hasMoved() && !this.isInCheck()) {
             // king side castle
             // check no pieces are in between
             if (!this.board.getTile(61).isOccupied() && !this.board.getTile(62).isOccupied()) {

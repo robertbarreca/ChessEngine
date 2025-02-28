@@ -70,7 +70,8 @@ public class Table {
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.chessBoard = Board.createStandardBoard();
+        // this.chessBoard = Board.createStandardBoard();
+        this.chessBoard = Board.createCustomBoard();
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();

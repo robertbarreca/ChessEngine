@@ -60,7 +60,7 @@ public class BlackPlayer extends Player{
      * @return all the castle moves the black player can make
      */
     @Override
-    protected Collection<Move> calcCastleMoves(final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
+    public Collection<Move> calcCastleMoves(final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
         final List<Move> castleMoves = new ArrayList<>();
         // king hasn't moved nor is in check
         if (!this.king.hasMoved() && !this.isInCheck()) {

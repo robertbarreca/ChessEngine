@@ -174,5 +174,5 @@ public abstract class Player {
      */
     public abstract Player getOpponent();
 
-    protected abstract Collection<Move> calcCastleMoves(Collection<Move>legalMoves,                 Collection<Move> opponentMoves);
+    public abstract Collection<Move> calcCastleMoves(Collection<Move>legalMoves,                 Collection<Move> opponentMoves);
 }

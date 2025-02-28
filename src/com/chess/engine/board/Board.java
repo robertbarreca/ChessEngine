@@ -45,11 +45,16 @@ public class Board {
 
         this.enPassantPawn = builder.enPassantPawn;
 
-        final Collection<Move> whiteMoves = calcMoves(this.whitePieces);
-        final Collection<Move> blackMoves = calcMoves(this.blackPieces);
+        Collection<Move> whiteMoves = calcMoves(this.whitePieces);
+        Collection<Move> blackMoves = calcMoves(this.blackPieces);
 
         this.whitePlayer = new WhitePlayer(this, whiteMoves, blackMoves);
         this.blackPlayer = new BlackPlayer(this, whiteMoves, blackMoves);
+
+        // calculate moves again for castle moves
+        whiteMoves = calcMoves(this.whitePieces);
+        blackMoves = calcMoves(this.blackPieces);
+        
         this.currPlayer = builder.currPlayerAlliance.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
@@ -214,6 +219,20 @@ public class Board {
         //white to move
         builder.setCurrPlayerAlliance(Alliance.WHITE);
         //build the board
+        return builder.build();
+    }
+
+    public static Board createCustomBoard() {
+        final Board.Builder builder = new Board.Builder();
+        // white setup
+        builder.setPiece(new King(Alliance.WHITE, 60));
+        builder.setPiece(new Rook(Alliance.WHITE, 56));
+        builder.setPiece(new Rook(Alliance.WHITE, 63));
+        // black setup
+        builder.setPiece(new King(Alliance.BLACK, 4));
+        builder.setPiece(new Rook(Alliance.BLACK, 0));
+        builder.setPiece(new Rook(Alliance.BLACK, 7));
+        builder.setCurrPlayerAlliance(Alliance.WHITE);
         return builder.build();
     }
 

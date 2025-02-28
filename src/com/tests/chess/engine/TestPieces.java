@@ -833,9 +833,9 @@ public class TestPieces {
 
 // TODO
 /*
- * write test cases for castling
  * test simple check mates
  * test simple stalemates
+ * fix gui castling bug
  *      
  * 
  */
