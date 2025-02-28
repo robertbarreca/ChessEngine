@@ -51,10 +51,10 @@ public class Board {
         this.whitePlayer = new WhitePlayer(this, whiteMoves, blackMoves);
         this.blackPlayer = new BlackPlayer(this, whiteMoves, blackMoves);
 
-        // calculate moves again for castle moves
-        whiteMoves = calcMoves(this.whitePieces);
-        blackMoves = calcMoves(this.blackPieces);
-        
+        // update all moves to get castle moves 
+        whiteMoves = this.whitePlayer.getLegalMoves();
+        blackMoves = this.blackPlayer.getLegalMoves();
+
         this.currPlayer = builder.currPlayerAlliance.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
@@ -226,8 +226,8 @@ public class Board {
         final Board.Builder builder = new Board.Builder();
         // white setup
         builder.setPiece(new King(Alliance.WHITE, 60));
-        builder.setPiece(new Rook(Alliance.WHITE, 56));
         builder.setPiece(new Rook(Alliance.WHITE, 63));
+        builder.setPiece(new Rook(Alliance.WHITE, 56));
         // black setup
         builder.setPiece(new King(Alliance.BLACK, 4));
         builder.setPiece(new Rook(Alliance.BLACK, 0));

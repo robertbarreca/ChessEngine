@@ -829,13 +829,3 @@ public class TestPieces {
         assertEquals(16, blackPieceSet.size());
     }
 }
-
-
-// TODO
-/*
- * test simple check mates
- * test simple stalemates
- * fix gui castling bug
- *      
- * 
- */

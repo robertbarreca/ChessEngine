@@ -9,3 +9,11 @@ import org.junit.runners.Suite;
 public class TestChessEngineSuite {
 
 }
+
+
+/*
+ * TODO:
+ * test simple check mates
+ * test simple stalemates
+ * fix highlight legal moves bug, moving into check
+ */
