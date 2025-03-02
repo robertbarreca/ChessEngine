@@ -7,12 +7,14 @@ import com.chess.engine.player.MoveTransition;
 public class MiniMax implements MoveStrategy {
 
     private final BoardEvaluator boardEvaluator;
+    private final int searchDepth;
 
     /**
      * Constructor for the minimax class
      */
-    public MiniMax() {
-        this.boardEvaluator = null;
+    public MiniMax(final int searchDepth) {
+        this.boardEvaluator = new StandardBoardEvauluator();
+        this.searchDepth = searchDepth;
     }
 
     /**
@@ -32,8 +34,8 @@ public class MiniMax implements MoveStrategy {
      * @return The best move determined by the MiniMax algorithm.
      */
     @Override
-    public Move execute(Board board, int depth) {
-        final long startTime = System.currentTimeMillis();
+    public Move execute(Board board) {
+        // final long startTime = System.currentTimeMillis();
         
         Move bestMove = null;
         int maxVal = Integer.MIN_VALUE;
@@ -46,8 +48,8 @@ public class MiniMax implements MoveStrategy {
 
             if (moveTransition.getMoveStatus().isDone()) {
                 currVal = board.getCurrPlayer().getAlliance().isWhite()
-                        ? min(moveTransition.getUpdatedBoard(), depth - 1)
-                        : max(moveTransition.getUpdatedBoard(), depth - 1);
+                        ? min(moveTransition.getUpdatedBoard(), this.searchDepth - 1)
+                        : max(moveTransition.getUpdatedBoard(), this.searchDepth - 1);
 
                 // if player is white maximize the score
                 if (board.getCurrPlayer().getAlliance().isWhite() && currVal >= maxVal) {
@@ -61,7 +63,7 @@ public class MiniMax implements MoveStrategy {
                 }
             }
         }
-        final long executionTime = System.currentTimeMillis() - startTime;
+        // final long executionTime = System.currentTimeMillis() - startTime;
         return bestMove;
     }
 
@@ -74,7 +76,7 @@ public class MiniMax implements MoveStrategy {
      * @return The minimum score achievable for the current player.
      */
     public int min(final Board board, final int depth) {
-        if (depth == 0) {
+        if (depth == 0 || isGameOver(board)) {
             return this.boardEvaluator.evaluate(board, depth);
         }
 
@@ -99,22 +101,31 @@ public class MiniMax implements MoveStrategy {
      * @param depth The remaining search depth.
      * @return The maximum score achievable for the current player.
      */
-    public int max(final Board board, final int depth) {
-        if (depth == 0) {
-            return this.boardEvaluator.evaluate(board, depth);
-        }
+     public int max(final Board board, final int depth) {
+         if (depth == 0 || isGameOver(board)) {
+             return this.boardEvaluator.evaluate(board, depth);
+         }
 
-        int maxVal = Integer.MIN_VALUE;
-        for (final Move move : board.getCurrPlayer().getLegalMoves()) {
-            final MoveTransition moveTransition = board.getCurrPlayer().makeMove(move);
-            if (moveTransition.getMoveStatus().isDone()) {
-                final int currVal = min(moveTransition.getUpdatedBoard(), depth - 1);
-                if (currVal >= maxVal) {
-                    maxVal = currVal;
-                }
-            }
-        }
-        return maxVal;
-    }
+         int maxVal = Integer.MIN_VALUE;
+         for (final Move move : board.getCurrPlayer().getLegalMoves()) {
+             final MoveTransition moveTransition = board.getCurrPlayer().makeMove(move);
+             if (moveTransition.getMoveStatus().isDone()) {
+                 final int currVal = min(moveTransition.getUpdatedBoard(), depth - 1);
+                 if (currVal >= maxVal) {
+                     maxVal = currVal;
+                 }
+             }
+         }
+         return maxVal;
+     }
+    
+     /**
+      * Determines if the passed board's game has finished
+      * @param board the board being evaulted
+      * @return true if the game is over and false otherwise
+      */
+     private static boolean isGameOver(final Board board) {
+         return board.getCurrPlayer().isInCheckmate() || board.getCurrPlayer().isInStalemate();
+     }
     
 }

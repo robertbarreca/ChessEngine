@@ -4,11 +4,15 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Board.Builder;
 import com.chess.engine.board.BoardUtils;
+import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.player.MoveTransition;
+import com.chess.engine.player.ai.MiniMax;
+import com.chess.engine.player.ai.MoveStrategy;
 import com.chess.engine.pieces.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestCheckmate {
@@ -30,13 +34,16 @@ public class TestCheckmate {
 
         assertTrue(t3.getMoveStatus().isDone());
 
+        final MoveStrategy strategy = new MiniMax(2);
+        final Move aiMove = strategy.execute(t3.getUpdatedBoard());
+        final Move bestMove = MoveFactory.createMove(t3.getUpdatedBoard(), BoardUtils.          getCoordFromPos("d8"),BoardUtils.getCoordFromPos("h4"));
+
         final MoveTransition t4 = t3.getUpdatedBoard().getCurrPlayer()
-                .makeMove(MoveFactory.createMove(t3.getUpdatedBoard(), BoardUtils.getCoordFromPos("d8"), BoardUtils.getCoordFromPos("h4")));
+                .makeMove(bestMove);
 
         assertTrue(t4.getMoveStatus().isDone());
-
         assertTrue(t4.getUpdatedBoard().getCurrPlayer().isInCheckmate());
-
+        assertEquals(bestMove, aiMove);
     }
 
     @Test
