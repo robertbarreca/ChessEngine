@@ -8,8 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
@@ -21,6 +23,8 @@ import com.chess.engine.board.Tile;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveTransition;
+import com.chess.engine.player.ai.MiniMax;
+import com.chess.engine.player.ai.MoveStrategy;
 import com.google.common.collect.Lists;
 
 import java.awt.*;
@@ -35,20 +39,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
 
-public class Table {
+@SuppressWarnings("deprecation")
+public class Table extends Observable {
     private final JFrame gameFrame;
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private Board chessBoard;
     private final MoveLog moveLog;
+    private final GameSetup gameSetup;
 
     private Tile srcTile;
     private Tile destTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
+
+    private Move computerMove;
 
     private boolean highlightLegalMoves;
 
@@ -60,11 +71,12 @@ public class Table {
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
     
+    private static final Table INSTANCE = new Table();
         
     /**
      * Constructor for the table class
      */
-    public Table() {
+    private Table() {
         this.gameFrame = new JFrame("Chess Engine");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -76,6 +88,8 @@ public class Table {
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
+        this.addObserver(new TableGameAIWatcher());
+        this.gameSetup = new GameSetup(this.gameFrame, true);
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = true;
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
@@ -83,6 +97,26 @@ public class Table {
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
     }
+
+    public static Table get() {
+        return INSTANCE;
+    }
+
+    public void show(){
+        Table.get().getMoveLog().clear();
+        Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
+        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+    }
+
+    private GameSetup getGameSetup() {
+        return this.gameSetup;
+    }
+
+    private Board getGameBoard() {
+        return this.chessBoard; 
+    }
+
         
     /**
      * Populates and creates the table's menu bar with various actions a user can do
@@ -92,6 +126,7 @@ public class Table {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
         tableMenuBar.add(createPreferencesMenu());
+        tableMenuBar.add(createOptionsMenu());
         return tableMenuBar;
     }
     
@@ -129,38 +164,142 @@ public class Table {
      * Creates the file preferences menu item for the table bar and gives it actions it can do
      * @return the preferences menu item
      */
-    private JMenu createPreferencesMenu() {
-        final JMenu preferencesMenu = new JMenu("Preferences");
-        // create flip board menu item
-        final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
-        flipBoardMenuItem.addActionListener(new ActionListener() {
+     private JMenu createPreferencesMenu() {
+         final JMenu preferencesMenu = new JMenu("Preferences");
+         // create flip board menu item
+         final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
+         flipBoardMenuItem.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(final ActionEvent e) {
+                 boardDirection = boardDirection.opposite();
+                 boardPanel.drawBoard(chessBoard);
+             }
+         });
+
+         // create highlight legal moves menu item
+         final JCheckBoxMenuItem legalMovesHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", true);
+
+         legalMovesHighlighterCheckbox.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(final ActionEvent e) {
+                 highlightLegalMoves = legalMovesHighlighterCheckbox.isSelected();
+             }
+         });
+
+         // add created items
+         preferencesMenu.add(flipBoardMenuItem);
+         preferencesMenu.add(legalMovesHighlighterCheckbox);
+         return preferencesMenu;
+     }
+    
+    private JMenu createOptionsMenu() {
+        final JMenu optionsMenu = new JMenu("Options");
+
+        final JMenuItem setupGaMenuItem = new JMenuItem("Setup Game");
+        setupGaMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
-            boardDirection = boardDirection.opposite();
-            boardPanel.drawBoard(chessBoard);
-        }
-        });
-        
-        // create highlight legal moves menu item
-        final JCheckBoxMenuItem legalMovesHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", true);
-        
-        legalMovesHighlighterCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                highlightLegalMoves = legalMovesHighlighterCheckbox.isSelected();
+            public void actionPerformed(ActionEvent e) {
+                Table.get().getGameSetup().promptUser();
+                Table.get().setupUpdate(Table.get().getGameSetup());
             }
         });
 
-        // add created items
-        preferencesMenu.add(flipBoardMenuItem);
-        preferencesMenu.add(legalMovesHighlighterCheckbox);
-        return preferencesMenu;
+        optionsMenu.add(setupGaMenuItem);
+        return optionsMenu;
+    }
+    
+    private void setupUpdate(final GameSetup gameSetup) {
+        setChanged();
+        notifyObservers();
+    }
+
+    private static class TableGameAIWatcher implements Observer {
+
+        @Override
+        public void update(final Observable o, final Object arg) {
+            if (Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().getCurrPlayer())
+                    && !Table.get().getGameBoard().getCurrPlayer().isInCheckmate() &&
+                    !Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
+                final AIThinkTank thinkTank = new AIThinkTank();
+                thinkTank.execute();
+            }
+
+            if (Table.get().getGameBoard().getCurrPlayer().isInCheckmate()) {
+                // JOptionPane.showMessageDialog(Table.get().getBoardPanel, arg);
+                System.out.println("game over: " + Table.get().getGameBoard().getCurrPlayer() + "is in checkmate");
+            }
+
+            if (Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
+                System.out.println("game over: " + Table.get().getGameBoard().getCurrPlayer() + "is in stalemate");
+            }
+        }
+    }
+    
+    public void updateGameBoard(final Board board) {
+        this.chessBoard = board;
+    }
+
+    public void updateComputerMove(final Move move) {
+        this.computerMove = move;
+    }
+
+    private MoveLog getMoveLog() {
+        return this.moveLog;
+    }
+
+    private GameHistoryPanel getGameHistoryPanel() {
+        return this.gameHistoryPanel;
+    }
+
+    private TakenPiecesPanel getTakenPiecesPanel() {
+        return this.takenPiecesPanel;
+    }
+
+    private BoardPanel getBoardPanel() {
+        return this.boardPanel;
+    }
+
+    private void moveMadeUpdate(final PlayerType playerType) {
+        setChanged();
+        notifyObservers(playerType);
+    }
+
+    private static class AIThinkTank extends SwingWorker<Move, String>{
+        private AIThinkTank() {
+            
+        }
+
+        @Override
+        protected Move doInBackground() throws Exception {
+            final MoveStrategy miniMax = new MiniMax(4);
+            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+
+            return bestMove;
+        }
+
+        @Override
+        public void done() {
+            try {
+                final Move bestMove = get();
+                Table.get().updateComputerMove(bestMove);
+                Table.get().updateGameBoard(Table.get().getGameBoard().getCurrPlayer().makeMove(bestMove).getUpdatedBoard());
+                Table.get().getMoveLog().addMove(bestMove);
+                Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
+                Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+                Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+                Table.get().moveMadeUpdate(PlayerType.COMPUTER);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     /**
      * Enum that represents the direction the board is facing
      */
-    public enum BoardDirection{
+    public enum BoardDirection {
         NORMAL {
             /**
              * Gets the the board's tile panels based on the board directions order
@@ -180,10 +319,10 @@ public class Table {
             BoardDirection opposite() {
                 return FLIPPED;
             }
-            
+
         },
         FLIPPED {
-            
+
             /**
              * Gets the the board's tile panels based on the board directions order
              * @param boardTiles the gui representation of the tile panels
@@ -194,27 +333,34 @@ public class Table {
                 return Lists.reverse(boardTiles);
             }
 
-        /**
-         * Get's the opposite board direction
-         * @return the normal board direction
-         */
+            /**
+             * Get's the opposite board direction
+             * @return the normal board direction
+             */
             @Override
             BoardDirection opposite() {
                 return NORMAL;
             }
 
         };
+
         /**
          * Gets the the board's tile panels based on the board directions order
          * @param boardTiles the gui representation of the tile panels
          * @return the the board's tile panels based on the board directions order
          */
         abstract List<TilePanel> traverse(final List<TilePanel> boardTiles);
+
         /**
          * Get's the opposite board direction
          * @return the opposite board direction
          */
         abstract BoardDirection opposite();
+    }
+    
+    enum PlayerType {
+        HUMAN,
+        COMPUTER;
     }
 
     /**
@@ -374,6 +520,11 @@ public class Table {
                             public void run() {
                                 gameHistoryPanel.redo(chessBoard, moveLog);
                                 takenPiecesPanel.redo(moveLog);
+                                
+                                if (gameSetup.isAIPlayer(chessBoard.getCurrPlayer())) {
+                                    Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                                }
+
                                 boardPanel.drawBoard(chessBoard);
 
                             }
