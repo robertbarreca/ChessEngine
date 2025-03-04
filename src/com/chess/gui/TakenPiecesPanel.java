@@ -2,8 +2,9 @@ package com.chess.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,10 +42,15 @@ public class TakenPiecesPanel extends JPanel{
         super(new BorderLayout());
         this.setBackground(PANEL_COLOR);
         this.setBorder(PANEL_BORDER);
-        this.northPanel = new JPanel(new GridLayout(8, 2));
-        this.southPanel = new JPanel(new GridLayout(8, 2));
+    
+        this.northPanel = new JPanel();
+        this.northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         this.northPanel.setBackground(PANEL_COLOR);
+
+        this.southPanel = new JPanel();
+        this.southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
         this.southPanel.setBackground(PANEL_COLOR);
+
         this.add(northPanel, BorderLayout.NORTH);
         this.add(southPanel, BorderLayout.SOUTH);
         setPreferredSize(TAKEN_PIECES_DIMENSION);
@@ -65,7 +72,7 @@ public class TakenPiecesPanel extends JPanel{
                 } else if (capturedPiece.getAlliance().isBlack()) {
                     blackTakenPieces.add(capturedPiece);
                 } else {
-                    throw new RuntimeException("Piece must be white or black");
+                    throw new RuntimeException("Pieces must be white or black");
                 }
             }
         }
@@ -92,8 +99,16 @@ public class TakenPiecesPanel extends JPanel{
                 String piecePath = "art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1) + capturedPiece.toString() + ".gif";
                 final BufferedImage image = ImageIO.read(new File(piecePath));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(icon);
-                this.southPanel.add(imageLabel);
+                final JLabel imageLabel = new JLabel(new ImageIcon(icon.getImage()
+                        .getScaledInstance(icon.getIconWidth() - 15, icon.getIconWidth() - 15, Image.SCALE_SMOOTH)));
+                
+                // Wrap in a JPanel for centering
+                JPanel piecePanel = new JPanel();
+                piecePanel.setLayout(new BoxLayout(piecePanel, BoxLayout.X_AXIS));
+                piecePanel.add(imageLabel);
+                piecePanel.setBackground(PANEL_COLOR);
+                piecePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                this.southPanel.add(piecePanel);      
 
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -106,8 +121,13 @@ public class TakenPiecesPanel extends JPanel{
                 String piecePath = "art/pieces/" + capturedPiece.getAlliance().toString().substring(0, 1) + capturedPiece.toString() + ".gif";
                 final BufferedImage image = ImageIO.read(new File(piecePath));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(icon);
-                this.northPanel.add(imageLabel);
+                final JLabel imageLabel = new JLabel((new ImageIcon(icon.getImage().getScaledInstance(icon.getIconWidth() - 15, icon.getIconWidth() - 15, Image.SCALE_SMOOTH))));
+                JPanel piecePanel = new JPanel();
+                piecePanel.setLayout(new BoxLayout(piecePanel, BoxLayout.X_AXIS));
+                piecePanel.add(imageLabel);
+                piecePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                piecePanel.setBackground(PANEL_COLOR);
+                this.northPanel.add(piecePanel);    
 
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -117,3 +137,4 @@ public class TakenPiecesPanel extends JPanel{
     }
 
 }
+

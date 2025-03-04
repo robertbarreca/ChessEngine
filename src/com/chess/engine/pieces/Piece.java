@@ -126,7 +126,7 @@ public abstract class Piece {
     public enum PieceType {
         PAWN("P", 100),
         KNIGHT("N", 300),
-        BISHOP("B", 300),
+        BISHOP("B", 305),
         ROOK("R", 500) {
             /**
             * Says whether the current piece type is a rook or not

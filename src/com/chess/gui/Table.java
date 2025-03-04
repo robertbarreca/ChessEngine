@@ -70,171 +70,191 @@ public class Table extends Observable {
 
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
-    
-    private static final Table INSTANCE = new Table();
+    private boolean gameOverShown = false;
         
-    /**
-     * Constructor for the table class
-     */
-    private Table() {
-        this.gameFrame = new JFrame("Chess Engine");
-        this.gameFrame.setLayout(new BorderLayout());
-        final JMenuBar tableMenuBar = createTableMenuBar();
-        this.gameFrame.setJMenuBar(tableMenuBar);
-        this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.chessBoard = Board.createStandardBoard();
-        // this.chessBoard = Board.createCustomBoard();
-        this.gameHistoryPanel = new GameHistoryPanel();
-        this.takenPiecesPanel = new TakenPiecesPanel();
-        this.boardPanel = new BoardPanel();
-        this.moveLog = new MoveLog();
-        this.addObserver(new TableGameAIWatcher());
-        this.gameSetup = new GameSetup(this.gameFrame, true);
-        this.boardDirection = BoardDirection.NORMAL;
-        this.highlightLegalMoves = true;
-        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
-        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
-        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
-        this.gameFrame.setVisible(true);
-    }
-
-    public static Table get() {
-        return INSTANCE;
-    }
-
-    public void show(){
-        Table.get().getMoveLog().clear();
-        Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
-        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
-        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
-    }
-
-    private GameSetup getGameSetup() {
-        return this.gameSetup;
-    }
-
-    private Board getGameBoard() {
-        return this.chessBoard; 
-    }
-
+        private static final Table INSTANCE = new Table();
+            
+        /**
+         * Constructor for the table class
+         */
+        private Table() {
+            this.gameFrame = new JFrame("Chess Engine");
+            this.gameFrame.setLayout(new BorderLayout());
+            final JMenuBar tableMenuBar = createTableMenuBar();
+            this.gameFrame.setJMenuBar(tableMenuBar);
+            this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+            this.chessBoard = Board.createStandardBoard();
+            // this.chessBoard = Board.createCustomBoard();
+            this.gameHistoryPanel = new GameHistoryPanel();
+            this.takenPiecesPanel = new TakenPiecesPanel();
+            this.boardPanel = new BoardPanel();
+            this.moveLog = new MoveLog();
+            this.addObserver(new TableGameAIWatcher());
+            this.gameSetup = new GameSetup(this.gameFrame, true);
+            this.boardDirection = BoardDirection.NORMAL;
+            this.highlightLegalMoves = true;
+            this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
+            this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+            this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
+            this.gameFrame.setVisible(true);
+        }
+    
+        public static Table get() {
+            return INSTANCE;
+        }
+    
+        public void show(){
+            Table.get().getMoveLog().clear();
+            Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
+            Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+            Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+        }
+    
+        private GameSetup getGameSetup() {
+            return this.gameSetup;
+        }
+    
+        private Board getGameBoard() {
+            return this.chessBoard; 
+        }
+    
+            
+        /**
+         * Populates and creates the table's menu bar with various actions a user can do
+         * @return the populated menu bar to be populated
+         */
+        private JMenuBar createTableMenuBar() {
+            final JMenuBar tableMenuBar = new JMenuBar();
+            tableMenuBar.add(createFileMenu());
+            tableMenuBar.add(createPreferencesMenu());
+            tableMenuBar.add(createOptionsMenu());
+            return tableMenuBar;
+        }
         
-    /**
-     * Populates and creates the table's menu bar with various actions a user can do
-     * @return the populated menu bar to be populated
-     */
-    private JMenuBar createTableMenuBar() {
-        final JMenuBar tableMenuBar = new JMenuBar();
-        tableMenuBar.add(createFileMenu());
-        tableMenuBar.add(createPreferencesMenu());
-        tableMenuBar.add(createOptionsMenu());
-        return tableMenuBar;
-    }
+        /**
+         * Creates the file file menu item for the table bar and gives it actions it can do
+         * @return the file menu item
+         */
+        private JMenu createFileMenu() {
+            final JMenu fileMenu = new JMenu("File");
+            // create load pgn item
+            final JMenuItem openPGN = new JMenuItem("Load PGN File");
+            openPGN.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("open pgn file!");
+                }
+            });
     
-    /**
-     * Creates the file file menu item for the table bar and gives it actions it can do
-     * @return the file menu item
-     */
-    private JMenu createFileMenu() {
-        final JMenu fileMenu = new JMenu("File");
-        // create load pgn item
-        final JMenuItem openPGN = new JMenuItem("Load PGN File");
-        openPGN.addActionListener(new ActionListener() {
+            // create exit game item
+            final JMenuItem exitMenuItem = new JMenuItem("Exit");
+            exitMenuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+    
+            // add all created items
+            fileMenu.add(openPGN);
+            fileMenu.add(exitMenuItem);
+            return fileMenu;
+        }
+        
+         /**
+         * Creates the file preferences menu item for the table bar and gives it actions it can do
+         * @return the preferences menu item
+         */
+         private JMenu createPreferencesMenu() {
+             final JMenu preferencesMenu = new JMenu("Preferences");
+             // create flip board menu item
+             final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
+             flipBoardMenuItem.addActionListener(new ActionListener() {
+                 @Override
+                 public void actionPerformed(final ActionEvent e) {
+                     boardDirection = boardDirection.opposite();
+                     boardPanel.drawBoard(chessBoard);
+                 }
+             });
+    
+             // create highlight legal moves menu item
+             final JCheckBoxMenuItem legalMovesHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", true);
+    
+             legalMovesHighlighterCheckbox.addActionListener(new ActionListener() {
+                 @Override
+                 public void actionPerformed(final ActionEvent e) {
+                     highlightLegalMoves = legalMovesHighlighterCheckbox.isSelected();
+                 }
+             });
+    
+             // add created items
+             preferencesMenu.add(flipBoardMenuItem);
+             preferencesMenu.add(legalMovesHighlighterCheckbox);
+             return preferencesMenu;
+         }
+        
+        private JMenu createOptionsMenu() {
+            final JMenu optionsMenu = new JMenu("Options");
+    
+            final JMenuItem setupGaMenuItem = new JMenuItem("Setup Game");
+            setupGaMenuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Table.get().getGameSetup().promptUser();
+                    Table.get().setupUpdate(Table.get().getGameSetup());
+                }
+            });
+    
+            optionsMenu.add(setupGaMenuItem);
+            return optionsMenu;
+        }
+        
+        private void setupUpdate(final GameSetup gameSetup) {
+            setChanged();
+            notifyObservers();
+        }
+    
+        private static class TableGameAIWatcher implements Observer {
+    
             @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("open pgn file!");
-            }
-        });
-
-        // create exit game item
-        final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // add all created items
-        fileMenu.add(openPGN);
-        fileMenu.add(exitMenuItem);
-        return fileMenu;
-    }
+            public void update(final Observable o, final Object arg) {
+                if (Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().getCurrPlayer())
+                        && !Table.get().getGameBoard().getCurrPlayer().isInCheckmate() &&
+                        !Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
+                    final AIThinkTank thinkTank = new AIThinkTank();
+                    thinkTank.execute();
+                }
     
-     /**
-     * Creates the file preferences menu item for the table bar and gives it actions it can do
-     * @return the preferences menu item
-     */
-     private JMenu createPreferencesMenu() {
-         final JMenu preferencesMenu = new JMenu("Preferences");
-         // create flip board menu item
-         final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
-         flipBoardMenuItem.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(final ActionEvent e) {
-                 boardDirection = boardDirection.opposite();
-                 boardPanel.drawBoard(chessBoard);
-             }
-         });
-
-         // create highlight legal moves menu item
-         final JCheckBoxMenuItem legalMovesHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", true);
-
-         legalMovesHighlighterCheckbox.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(final ActionEvent e) {
-                 highlightLegalMoves = legalMovesHighlighterCheckbox.isSelected();
-             }
-         });
-
-         // add created items
-         preferencesMenu.add(flipBoardMenuItem);
-         preferencesMenu.add(legalMovesHighlighterCheckbox);
-         return preferencesMenu;
-     }
-    
-    private JMenu createOptionsMenu() {
-        final JMenu optionsMenu = new JMenu("Options");
-
-        final JMenuItem setupGaMenuItem = new JMenuItem("Setup Game");
-        setupGaMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Table.get().getGameSetup().promptUser();
-                Table.get().setupUpdate(Table.get().getGameSetup());
-            }
-        });
-
-        optionsMenu.add(setupGaMenuItem);
-        return optionsMenu;
-    }
-    
-    private void setupUpdate(final GameSetup gameSetup) {
-        setChanged();
-        notifyObservers();
-    }
-
-    private static class TableGameAIWatcher implements Observer {
-
-        @Override
-        public void update(final Observable o, final Object arg) {
-            if (Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().getCurrPlayer())
-                    && !Table.get().getGameBoard().getCurrPlayer().isInCheckmate() &&
-                    !Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
-                final AIThinkTank thinkTank = new AIThinkTank();
-                thinkTank.execute();
-            }
-
-            if (Table.get().getGameBoard().getCurrPlayer().isInCheckmate()) {
-                // JOptionPane.showMessageDialog(Table.get().getBoardPanel, arg);
-                System.out.println("game over: " + Table.get().getGameBoard().getCurrPlayer() + "is in checkmate");
-            }
-
-            if (Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
-                System.out.println("game over: " + Table.get().getGameBoard().getCurrPlayer() + "is in stalemate");
+                Table.renderGameOverPane();
             }
         }
+                        
+    public static void renderGameOverPane() {
+        // only render once
+        if (Table.get().gameOverShown) {
+            return;
+        }
+        // player is in check mate
+        if (Table.get().getGameBoard().getCurrPlayer().isInCheckmate()) {
+            JOptionPane.showMessageDialog(Table.get().getBoardPanel(),
+                    "Game Over: Player " + Table.get().getGameBoard().getCurrPlayer().getAlliance() + " is in checkmate!", "Game Over",
+                    JOptionPane.INFORMATION_MESSAGE);
+            Table.get().setGameOverShown(true);
+        }
+
+        // player is in stalemate
+        if (Table.get().getGameBoard().getCurrPlayer().isInStalemate()) {
+            JOptionPane.showMessageDialog(Table.get().getBoardPanel(),
+                    "Game Over: Player " + Table.get().getGameBoard().getCurrPlayer().getAlliance() + " is in stalemate!", "Game Over",
+                    JOptionPane.INFORMATION_MESSAGE);
+            Table.get().setGameOverShown(true);
+        }
     }
-    
+
+    private void setGameOverShown(final boolean b) {
+        this.gameOverShown = b;
+    }
+
     public void updateGameBoard(final Board board) {
         this.chessBoard = board;
     }
@@ -271,7 +291,7 @@ public class Table extends Observable {
 
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
 
             return bestMove;
@@ -460,6 +480,15 @@ public class Table extends Observable {
         public boolean removeMove(Move move) {
             return this.moves.remove(move);
         }
+
+        @Override
+        public String toString() {
+            StringBuilder logString = new StringBuilder();
+            for (Move move : this.moves) {
+                logString.append(move.toString()).append("\n");  
+            }
+            return logString.toString();
+        }
     }
     
     /**
@@ -526,6 +555,7 @@ public class Table extends Observable {
                                 }
 
                                 boardPanel.drawBoard(chessBoard);
+                                renderGameOverPane();
 
                             }
                         });
