@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
 
 /**

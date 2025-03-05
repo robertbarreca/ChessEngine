@@ -1,6 +1,7 @@
 package com.chess.gui;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -19,10 +20,10 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.MoveTransition;
 import com.chess.engine.board.Tile;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Piece;
-import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.ai.MiniMax;
 import com.chess.engine.player.ai.MoveStrategy;
 import com.google.common.collect.Lists;
@@ -63,7 +64,7 @@ public class Table extends Observable {
 
     private boolean highlightLegalMoves;
 
-    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
+    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(675, 600);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String pieceImagesPath = "art/pieces/";
@@ -118,6 +119,9 @@ public class Table extends Observable {
             return this.chessBoard; 
         }
     
+        private boolean isHumanPlayer() {
+            return !this.gameSetup.isAIPlayer(this.chessBoard.getCurrPlayer());
+        }
             
         /**
          * Populates and creates the table's menu bar with various actions a user can do
@@ -508,6 +512,7 @@ public class Table extends Observable {
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
             assignTilePieceIcon(chessBoard);
+            highlightTileBorder(chessBoard);
 
             addMouseListener(new MouseListener() {
                 @Override
@@ -519,6 +524,11 @@ public class Table extends Observable {
                         humanMovedPiece = null;
                     }
                     else if (isLeftMouseButton(e)) {
+                        if (!Table.get().isHumanPlayer()) {
+                            srcTile = null;
+                            destTile = null;
+                            humanMovedPiece = null;
+                        }
                         // first click selecting source tile
                         if (srcTile == null) {
                             srcTile = chessBoard.getTile(tileId);
@@ -593,6 +603,8 @@ public class Table extends Observable {
         public void drawTile(final Board board) {
             assignTileColor();
             assignTilePieceIcon(board);
+            highlightTileBorder(board);
+            highlightMove();
             highlightLegalMoves(board);
             this.validate();
             this.repaint();
@@ -603,7 +615,7 @@ public class Table extends Observable {
          * @param board the board referenced to find legal moves
          */
         private void highlightLegalMoves(final Board board) {
-            if (highlightLegalMoves) {
+            if (highlightLegalMoves && isHumanPlayer()) {
                 for (final Move move : pieceLegalMoves(board)) {
                     if (move.getDestCoord() == this.tileId) {
                         try {
@@ -646,6 +658,26 @@ public class Table extends Observable {
                     BoardUtils.RANK_3[this.tileId] ||
                     BoardUtils.RANK_1[this.tileId]) {
                 setBackground(this.tileId % 2 != 0 ? lightTileColor : darkTileColor);
+            }
+        }
+
+        private void highlightTileBorder(final Board board) {
+            if (humanMovedPiece != null &&
+                    humanMovedPiece.getAlliance() == board.getCurrPlayer().getAlliance() &&
+                    humanMovedPiece.getPosition() == this.tileId) {
+                setBorder(BorderFactory.createLineBorder(Color.cyan, 3));
+            } else {
+                setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            }
+        }
+        
+        private void highlightMove() {
+            if(computerMove != null) {
+                if(this.tileId == computerMove.getStartingCoord()) {
+                    setBackground(Color.pink);
+                } else if(this.tileId == computerMove.getDestCoord()) {
+                    setBackground(Color.red);
+                }
             }
         }
 

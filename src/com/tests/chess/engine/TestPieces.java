@@ -12,6 +12,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.MoveStatus;
+import com.chess.engine.board.MoveTransition;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
@@ -20,8 +22,6 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
-import com.chess.engine.player.MoveStatus;
-import com.chess.engine.player.MoveTransition;
 import com.google.common.collect.Sets;
 
 public class TestPieces {
