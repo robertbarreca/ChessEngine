@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
         TestBoard.class,
         TestCastling.class,
         TestCheckmate.class,
-        TestStalemate.class })
+        TestStalemate.class,
+        TestFen.class })
 
 public class TestChessEngineSuite {
 

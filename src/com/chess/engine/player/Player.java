@@ -45,6 +45,22 @@ public abstract class Player {
     }
 
     /**
+     * Says whether the king-side castle is capable for this player
+     * @return true if the king-side castle is capable and false otherwise
+     */
+    public boolean isKingSideCastleCapable() {
+        return true;
+    }
+    
+    /**
+     * Says whether the queen-side castle is capable for this player
+     * @return true if the queen-side castle is capable and false otherwise
+     */
+    public boolean isQueenSideCastleCapable() {
+        return true;
+    }
+
+    /**
      * get's all legal moves a player can make
      * @return all legal moves a player can make
      */

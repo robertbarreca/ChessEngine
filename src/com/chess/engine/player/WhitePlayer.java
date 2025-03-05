@@ -13,6 +13,7 @@ import com.chess.engine.board.Move.QueenSideCastleMove;
 import com.chess.engine.board.Tile;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Rook;
+import com.chess.engine.pieces.Piece.PieceType;
 
 public class WhitePlayer extends Player{
 
@@ -53,6 +54,38 @@ public class WhitePlayer extends Player{
         return this.board.getBlackPlayer();
     }
 
+    /**
+     * Says whether a king side castle is capable or not
+     * @return true if a king side castle is capable and false otherwise
+     */
+    @Override
+    public boolean isKingSideCastleCapable() {
+        Piece kingSidePiece = this.board.getTile(63).getPiece();
+        if (kingSidePiece != null && 
+            kingSidePiece.getPieceType() == PieceType.ROOK && 
+            !kingSidePiece.hasMoved() && 
+            kingSidePiece.getAlliance().isWhite()){
+                return !this.king.hasMoved();
+            }
+            return false;
+    }
+
+    /**
+     * Says whether a queen sied castle is capable or not
+     * @return true if a queen side castle is capable and false otherwise
+     */
+    @Override
+    public boolean isQueenSideCastleCapable() {
+        Piece queenSidePiece = this.board.getTile(56).getPiece();
+        if (queenSidePiece != null && 
+            queenSidePiece.getPieceType() == PieceType.ROOK && 
+            !queenSidePiece.hasMoved() && 
+            queenSidePiece.getAlliance().isWhite()){
+                return !this.king.hasMoved();
+            }
+            return false;
+    }
+    
     /**
      * Finds all the castle moves the white player can make
      * @param legalMoves the moves that white can make
