@@ -20,7 +20,7 @@ public class TestCheckmate {
     @Test
     public void testFoolsMate() {
         final Board board = Board.createStandardBoard();
-        final MoveTransition t1 = board.getCurrPlayer() .makeMove(MoveFactory.createMove(board, BoardUtils.getCoordFromPos("f2"), BoardUtils.getCoordFromPos("f3")));
+        final MoveTransition t1 = board.getCurrPlayer().makeMove(MoveFactory.createMove(board, BoardUtils.getCoordFromPos("f2"), BoardUtils.getCoordFromPos("f3")));
 
         assertTrue(t1.getMoveStatus().isDone());
 

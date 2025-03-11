@@ -7,8 +7,10 @@ import org.junit.Test;
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Board.Builder;
+import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.MoveTransition;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Knight;
@@ -108,5 +110,23 @@ public class TestBoard {
         assertEquals(5, BoardUtils.getCoordFromPos("f8"));
         assertEquals(6, BoardUtils.getCoordFromPos("g8"));
         assertEquals(7, BoardUtils.getCoordFromPos("h8"));
+    }
+
+    @Test
+    public void testStartingBoardEquals() {
+        final Board board1 = Board.createStandardBoard();
+        final Board board2 = Board.createStandardBoard();
+        // check two different instances of starting board
+        assertEquals(board1, board2);
+        assertEquals(board1, board1);
+        assertEquals(board2, board2);
+
+        // check different after one move
+        final Move m1 = MoveFactory.createMove(board1, BoardUtils.getCoordFromPos("e2"),
+                BoardUtils.getCoordFromPos("e4"));
+        final MoveTransition t1_2 = board1.getCurrPlayer().makeMove(m1);
+        
+        assertNotEquals(t1_2.getUpdatedBoard(), board1);
+        assertNotEquals(t1_2.getUpdatedBoard(), board2);
     }
 }

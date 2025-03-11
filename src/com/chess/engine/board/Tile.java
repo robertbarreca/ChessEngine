@@ -105,6 +105,23 @@ public abstract class Tile {
         public Piece getPiece() {
             return null;
         }
+
+        /**
+         * Check if this tile is equivlant to the passed object
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof EmptyTile)) {
+                return false;
+            }
+
+            final EmptyTile otherTile = (EmptyTile) obj;
+            return this.getCoord() == otherTile.getCoord();
+        }
     }
     
     /*
@@ -150,6 +167,23 @@ public abstract class Tile {
         @Override
         public Piece getPiece() {
             return this.piece;
+        }
+
+        /**
+         * Check if this tile is equivlant to the passed object
+         * @return true if they are equivlant and false otherwise
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof OccupiedTile)) {
+                return false;
+            }
+
+            final OccupiedTile otherTile = (OccupiedTile) obj;
+            return this.getCoord() == otherTile.getCoord() && this.getPiece().equals(otherTile.getPiece());
         }
     }
 }

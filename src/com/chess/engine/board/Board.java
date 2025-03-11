@@ -124,7 +124,7 @@ public class Board {
      */
     public Collection<Move> calcMoves(final Collection<Piece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
-        for (final Piece p: pieces){
+        for (final Piece p : pieces) {
             legalMoves.addAll(p.calcLegalMoves(this));
         }
         return legalMoves;
@@ -158,13 +158,41 @@ public class Board {
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < BoardUtils.NUM_TILES; i++) {
             final String tileText = this.gameBoard.get(i).toString();
-                builder.append(String.format("%3s", tileText));
-                if ((i + 1) % BoardUtils.NUM_TILES_PER_ROW == 0) {
-                    builder.append("\n");
-                }
+            builder.append(String.format("%3s", tileText));
+            if ((i + 1) % BoardUtils.NUM_TILES_PER_ROW == 0) {
+                builder.append("\n");
             }
-            return builder.toString();
         }
+        return builder.toString();
+    }
+        
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !(obj instanceof Board)) return false;
+        Board otherBoard = (Board) obj;
+
+        // Compare each tile on the board
+        for (int i = 0; i < BoardUtils.NUM_TILES; i++) {
+            if (!this.getTile(i).equals(otherBoard.getTile(i))) {
+                return false;
+            }
+        }
+
+        // Compare en passant pawn
+        if (this.enPassantPawn == null) {
+            if (otherBoard.enPassantPawn != null) return false;
+        } else if (!this.enPassantPawn.equals(otherBoard.enPassantPawn)) {
+            return false;
+        }
+
+        // Compare current player
+        if (!this.currPlayer.getAlliance().equals(otherBoard.currPlayer.getAlliance())) {
+            return false;
+        }
+        return true;
+}
+
             
     /**
      * Creates a chess board using the provided builder configuration.

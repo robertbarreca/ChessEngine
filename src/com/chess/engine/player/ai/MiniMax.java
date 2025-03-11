@@ -35,7 +35,7 @@ public class MiniMax implements MoveStrategy {
      */
     @Override
     public Move execute(Board board) {
-        // final long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
         
         Move bestMove = null;
         int maxVal = Integer.MIN_VALUE;
@@ -48,8 +48,8 @@ public class MiniMax implements MoveStrategy {
 
             if (moveTransition.getMoveStatus().isDone()) {
                 currVal = board.getCurrPlayer().getAlliance().isWhite()
-                        ? min(moveTransition.getUpdatedBoard(), this.searchDepth - 1)
-                        : max(moveTransition.getUpdatedBoard(), this.searchDepth - 1);
+                        ? min(moveTransition.getUpdatedBoard(), this.searchDepth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE)
+                        : max(moveTransition.getUpdatedBoard(), this.searchDepth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
                 // if player is white maximize the score
                 if (board.getCurrPlayer().getAlliance().isWhite() && currVal >= maxVal) {
@@ -63,7 +63,8 @@ public class MiniMax implements MoveStrategy {
                 }
             }
         }
-        // final long executionTime = System.currentTimeMillis() - startTime;
+        final long executionTime = System.currentTimeMillis() - startTime;
+        System.out.println(executionTime);
         return bestMove;
     }
 
@@ -75,7 +76,7 @@ public class MiniMax implements MoveStrategy {
      * @param depth The remaining search depth.
      * @return The minimum score achievable for the current player.
      */
-    public int min(final Board board, final int depth) {
+    public int min(final Board board, final int depth, int alpha, int beta) {
         if (depth == 0 || isGameOver(board)) {
             return this.boardEvaluator.evaluate(board, depth);
         }
@@ -84,9 +85,11 @@ public class MiniMax implements MoveStrategy {
         for (final Move move : board.getCurrPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.getCurrPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
-                final int currVal = max(moveTransition.getUpdatedBoard(), depth - 1);
-                if (currVal <= minVal) {
-                    minVal = currVal;
+                final int currVal = max(moveTransition.getUpdatedBoard(), depth - 1, alpha, beta);
+                minVal = Math.min(minVal, currVal);
+                beta = Math.min(beta, currVal);
+                if (beta <= alpha) {
+                    break;
                 }
             }
         }
@@ -101,23 +104,25 @@ public class MiniMax implements MoveStrategy {
      * @param depth The remaining search depth.
      * @return The maximum score achievable for the current player.
      */
-     public int max(final Board board, final int depth) {
+     public int max(final Board board, final int depth, int alpha, int beta) {
          if (depth == 0 || isGameOver(board)) {
-             return this.boardEvaluator.evaluate(board, depth);
-         }
+            return this.boardEvaluator.evaluate(board, depth);
+        }
 
-         int maxVal = Integer.MIN_VALUE;
-         for (final Move move : board.getCurrPlayer().getLegalMoves()) {
-             final MoveTransition moveTransition = board.getCurrPlayer().makeMove(move);
-             if (moveTransition.getMoveStatus().isDone()) {
-                 final int currVal = min(moveTransition.getUpdatedBoard(), depth - 1);
-                 if (currVal >= maxVal) {
-                     maxVal = currVal;
-                 }
-             }
-         }
-         return maxVal;
-     }
+        int maxVal = Integer.MIN_VALUE;
+        for (final Move move : board.getCurrPlayer().getLegalMoves()) {
+            final MoveTransition moveTransition = board.getCurrPlayer().makeMove(move);
+            if (moveTransition.getMoveStatus().isDone()) {
+                final int currVal = min(moveTransition.getUpdatedBoard(), depth - 1, alpha, beta);
+                maxVal = Math.max(currVal, maxVal);
+                alpha = Math.max(alpha, currVal);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+        }
+        return maxVal;
+    }
     
      /**
       * Determines if the passed board's game has finished
