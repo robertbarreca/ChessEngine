@@ -2,6 +2,9 @@ package com.tests.chess.engine;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.chess.engine.Alliance;
@@ -17,7 +20,6 @@ import com.chess.engine.pieces.Knight;
 import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
-import com.google.common.collect.Iterables;
 
 public class TestBoard {
     
@@ -35,7 +37,8 @@ public class TestBoard {
         assertFalse(board.getCurrPlayer().getOpponent().isInCheckmate());
         assertFalse(board.getCurrPlayer().getOpponent().hasCastled());
 
-        final Iterable<Move> allMoves = Iterables.concat(board.getWhitePlayer().getLegalMoves(), board.getWhitePlayer().getLegalMoves());
+        List<Move> allMoves = new ArrayList<>(board.getWhitePlayer().getLegalMoves());
+        allMoves.addAll(board.getWhitePlayer().getLegalMoves());
         for(final Move move : allMoves) {
             assertFalse(move.isAttackingMove());
             assertFalse(move.isCastlingMove());

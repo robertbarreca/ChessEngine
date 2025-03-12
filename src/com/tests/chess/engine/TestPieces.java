@@ -4,6 +4,7 @@ package com.tests.chess.engine;
 import static org.junit.Assert.*;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -22,7 +23,6 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
-import com.google.common.collect.Sets;
 
 public class TestPieces {
 
@@ -821,9 +821,9 @@ public class TestPieces {
     @Test
     public void testHashCode() {
         final Board board = Board.createStandardBoard();
-        final Set<Piece> pieceSet = Sets.newHashSet(board.getAllPieces());
-        final Set<Piece> whitePieceSet = Sets.newHashSet(board.getWhitePieces());
-        final Set<Piece> blackPieceSet = Sets.newHashSet(board.getBlackPieces());
+        final Set<Piece> pieceSet = new HashSet<>(board.getAllPieces());
+        final Set<Piece> whitePieceSet = new HashSet<>(board.getWhitePieces());
+        final Set<Piece> blackPieceSet = new HashSet<>(board.getBlackPieces());
         assertEquals(32, pieceSet.size());
         assertEquals(16, whitePieceSet.size());
         assertEquals(16, blackPieceSet.size());

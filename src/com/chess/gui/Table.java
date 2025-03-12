@@ -26,7 +26,6 @@ import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.ai.MiniMax;
 import com.chess.engine.player.ai.MoveStrategy;
-import com.google.common.collect.Lists;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -354,7 +353,10 @@ public class Table extends Observable {
              */
             @Override
             List<TilePanel> traverse(List<TilePanel> boardTiles) {
-                return Lists.reverse(boardTiles);
+                // return Lists.reverse(boardTiles);
+                List<TilePanel> reversedBoardTiles = new ArrayList<>(boardTiles);
+                Collections.reverse(reversedBoardTiles);
+                return reversedBoardTiles;
             }
 
             /**
