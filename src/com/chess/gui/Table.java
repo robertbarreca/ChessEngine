@@ -550,6 +550,7 @@ public class Table extends Observable {
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getUpdatedBoard();
                                 moveLog.addMove(move);
+                                updateComputerMove(null);
                             }
                             // clear selections
                             srcTile = null;
