@@ -30,7 +30,7 @@ A fully object-oriented Chess Engine built in Java, featuring a modular design w
 make            # Compile the entire project
 make run        # Run the Chess Engine
 make test       # Run test suite
-make clean      #remove all compiled files
+make clean      # Remove all compiled files
 ```
 
 ## ✅ Testing
